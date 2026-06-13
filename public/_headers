@@ -13,4 +13,5 @@
   X-Frame-Options: DENY
 
 /api/*
+  X-Robots-Tag: noindex, nofollow
   X-Frame-Options: DENY
