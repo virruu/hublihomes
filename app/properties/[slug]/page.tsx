@@ -165,6 +165,10 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
             <Highlight icon={<CheckIcon className="h-4 w-4 sm:h-5 sm:w-5" />} label="Facing" value={property.facing} />
           </div>
 
+          <div className="mt-4 lg:hidden">
+            <ContactCard property={property} />
+          </div>
+
           <section className="mt-6 sm:mt-8">
             <h2 className="text-lg font-bold text-ink sm:text-xl">Overview</h2>
             <div className="mt-2">
@@ -256,6 +260,7 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
       <div className="fixed inset-x-0 bottom-16 z-30 border-t border-brand-100 bg-white/95 p-3 backdrop-blur-xl lg:hidden">
         <div className="mx-auto flex max-w-lg items-center gap-3">
           <div className="min-w-0 flex-1">
+            <p className="text-[10px] text-ink-faint">Listed by HubliHomes</p>
             <p className="text-xs text-ink-faint">{property.listing === "Rent" ? "Rent" : "Price"}</p>
             <p className="truncate text-lg font-bold text-brand-700">{formatPrice(property)}</p>
           </div>
