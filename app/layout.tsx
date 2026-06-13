@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { FloatingContact } from "@/components/floating-contact";
+import { NetlifyIdentityWidget } from "@/components/netlify-identity";
 import { JsonLd } from "@/components/jsonld";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { SiteFooter } from "@/components/site-footer";
@@ -62,6 +63,7 @@ export default function RootLayout({
         <SiteFooter />
         <FloatingContact />
         <MobileBottomNav />
+        <NetlifyIdentityWidget />
       </body>
     </html>
   );
