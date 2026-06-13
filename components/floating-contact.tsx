@@ -8,20 +8,20 @@ export function FloatingContact() {
   );
 
   return (
-    <div className="fixed bottom-5 right-5 z-40 flex flex-col gap-3">
+    <div className="fixed bottom-24 right-4 z-30 hidden flex-col gap-3 sm:bottom-5 sm:right-5 sm:flex md:bottom-5">
       <a
         href={`https://wa.me/${site.whatsapp}?text=${waText}`}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
-        className="grid h-14 w-14 place-items-center rounded-full bg-[#25D366] text-white shadow-lg shadow-emerald-600/30 transition-transform hover:scale-110"
+        className="grid h-14 w-14 place-items-center rounded-full bg-[#25D366] text-white shadow-lift transition-transform hover:scale-105"
       >
         <WhatsAppIcon className="h-7 w-7" />
       </a>
       <a
         href={`tel:${site.phone}`}
         aria-label="Call HubliHomes"
-        className="grid h-14 w-14 place-items-center rounded-full bg-brand-600 text-white shadow-lg shadow-brand-600/30 transition-transform hover:scale-110"
+        className="grid h-14 w-14 place-items-center rounded-full bg-brand-600 text-white shadow-lift transition-transform hover:scale-105"
       >
         <PhoneIcon className="h-6 w-6" />
       </a>

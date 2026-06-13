@@ -17,7 +17,7 @@ export function PropertyCard({ property }: { property: Property }) {
       <div className="relative">
         <PropertyImage
           property={property}
-          className="h-52 w-full transition-transform duration-500 group-hover:scale-105"
+          className="h-44 w-full transition-transform duration-500 group-hover:scale-[1.02] sm:h-52"
         />
         <div className="absolute left-3 top-3">
           <PropertyBadges property={property} />
@@ -25,38 +25,38 @@ export function PropertyCard({ property }: { property: Property }) {
         <div className="absolute right-3 top-3">
           <FavoriteButton slug={property.slug} />
         </div>
-        <span className="absolute bottom-3 right-3 rounded-full bg-white/90 px-3 py-1 text-sm font-bold text-slate-900 shadow">
+        <span className="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-sm font-bold text-ink shadow-soft">
           {formatPrice(property)}
         </span>
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 p-4">
+      <div className="flex flex-1 flex-col gap-2.5 p-3.5 sm:gap-3 sm:p-4">
         <div>
           <span className="text-xs font-semibold uppercase tracking-wide text-brand-600">
             {property.listing === "Rent" ? "For Rent" : "For Sale"} ·{" "}
             {property.propertyType}
           </span>
-          <h3 className="mt-0.5 line-clamp-1 text-base font-bold">
+          <h3 className="mt-0.5 line-clamp-2 text-sm font-bold text-ink sm:line-clamp-1 sm:text-base">
             {property.title}
           </h3>
-          <p className="mt-1 flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400">
-            <PinIcon className="h-4 w-4" />
+          <p className="mt-1 flex items-center gap-1 text-sm text-ink-muted">
+            <PinIcon className="h-4 w-4 shrink-0" />
             {property.locality}, {property.city}
           </p>
         </div>
 
-        <div className="mt-auto flex items-center gap-4 border-t border-slate-100 pt-3 text-sm text-slate-600 dark:border-white/10 dark:text-slate-300">
+        <div className="mt-auto flex items-center gap-3 border-t border-brand-50 pt-2.5 text-xs text-ink-muted sm:gap-4 sm:pt-3 sm:text-sm">
           {property.bhk !== null && (
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1">
               <BedIcon className="h-4 w-4" /> {bhkLabel(property)}
             </span>
           )}
           {property.bathrooms > 0 && (
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1">
               <BathIcon className="h-4 w-4" /> {property.bathrooms} Bath
             </span>
           )}
-          <span className="flex items-center gap-1.5">
+          <span className="flex items-center gap-1">
             <AreaIcon className="h-4 w-4" /> {property.area} sqft
           </span>
         </div>

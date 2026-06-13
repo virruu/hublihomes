@@ -1,10 +1,10 @@
 import type { Property } from "@/lib/types";
 
 const STYLES: Record<string, string> = {
-  Featured: "bg-amber-500/90 text-white",
-  New: "bg-emerald-500/90 text-white",
+  Featured: "bg-brand-600/90 text-white",
+  New: "bg-emerald-600/90 text-white",
   Vastu: "bg-violet-500/90 text-white",
-  Bachelor: "bg-sky-500/90 text-white",
+  Bachelor: "bg-sky-600/90 text-white",
   Veg: "bg-green-600/90 text-white",
 };
 
@@ -12,7 +12,7 @@ function Pill({ kind, children }: { kind: string; children: React.ReactNode }) {
   return (
     <span
       className={`rounded-full px-2.5 py-1 text-[11px] font-semibold shadow-sm ${
-        STYLES[kind] ?? "bg-slate-700/90 text-white"
+        STYLES[kind] ?? "bg-ink/80 text-white"
       }`}
     >
       {children}

@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 
 import { FloatingContact } from "@/components/floating-contact";
 import { JsonLd } from "@/components/jsonld";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { localBusinessSchema } from "@/lib/seo";
@@ -47,24 +48,20 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const themeScript = `(function(){try{var t=localStorage.getItem('hh-theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}})();`;
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-      <body className="font-sans antialiased">
+    <html lang="en" className={inter.variable}>
+      <body className="font-sans antialiased bg-surface text-ink">
         <JsonLd data={localBusinessSchema()} />
         <SiteHeader />
-        <main className="min-h-screen">{children}</main>
+        <main className="min-h-screen pb-20 md:pb-0">{children}</main>
         <SiteFooter />
         <FloatingContact />
+        <MobileBottomNav />
       </body>
     </html>
   );

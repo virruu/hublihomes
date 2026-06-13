@@ -8,8 +8,8 @@ backend:
 
 local_backend: true
 
-media_folder: "public/uploads"
-public_folder: "/uploads"
+media_folder: "public/images/properties"
+public_folder: "/images/properties"
 
 collections:
   - name: "properties"
@@ -18,8 +18,8 @@ collections:
     folder: "content/properties"
     create: true
     slug: "{{slug}}"
-    extension: "json"
-    format: "json"
+    extension: "mdx"
+    format: "frontmatter"
     summary: "{{title}} — {{locality}}"
     fields:
       - { name: "slug", label: "Slug", widget: "string" }
@@ -52,9 +52,9 @@ collections:
         }
       - { name: "featured", label: "Featured", widget: "boolean", default: false }
       - { name: "isNew", label: "New Listing", widget: "boolean", default: true }
-      - { name: "gradient", label: "Cover Gradient (Tailwind)", widget: "string" }
-      - { name: "gallery", label: "Gallery Gradients", widget: "list", field: { name: "g", label: "Gradient", widget: "string" } }
-      - { name: "description", label: "Description", widget: "text" }
+      - { name: "coverImage", label: "Cover Image", widget: "image" }
+      - { name: "gallery", label: "Gallery Images", widget: "list", field: { name: "image", label: "Image", widget: "image" } }
+      - { name: "body", label: "Description", widget: "markdown" }
       - { name: "amenities", label: "Amenities", widget: "list", field: { name: "a", label: "Amenity", widget: "string" } }
       - { name: "rules", label: "Rules", widget: "list", field: { name: "r", label: "Rule", widget: "string" } }
       - name: "nearby"
@@ -65,13 +65,6 @@ collections:
           - { name: "hospitals", label: "Hospitals", widget: "list", field: { name: "h", label: "Hospital", widget: "string" } }
           - { name: "busStop", label: "Bus Stop", widget: "string" }
           - { name: "railway", label: "Railway", widget: "string" }
-      - name: "owner"
-        label: "Owner"
-        widget: "object"
-        fields:
-          - { name: "name", label: "Name", widget: "string" }
-          - { name: "phone", label: "Phone", widget: "string" }
-          - { name: "whatsapp", label: "WhatsApp", widget: "string" }
       - name: "faq"
         label: "FAQ"
         widget: "list"

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { PropertyExplorer, type ExplorerFilters } from "@/components/property-explorer";
 import { getAllProperties, getLocalities } from "@/lib/properties";
@@ -15,6 +16,10 @@ function str(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
 }
 
+function ExplorerFallback() {
+  return <div className="skeleton h-96 rounded-2xl" />;
+}
+
 export default function PropertiesPage({
   searchParams,
 }: {
@@ -28,23 +33,32 @@ export default function PropertiesPage({
     type: str(searchParams.type) ?? "Any",
     locality: str(searchParams.locality) ?? "Any",
     bhk: str(searchParams.bhk) ?? "Any",
+    budget: Number(str(searchParams.budget) ?? 0),
+    furnished: str(searchParams.furnished) ?? "Any",
+    facing: str(searchParams.facing) ?? "Any",
+    vastu: str(searchParams.vastu) === "true",
     veg: str(searchParams.veg) === "Yes",
     bachelors: str(searchParams.bachelors) === "Allowed",
     family: str(searchParams.family) === "Preferred",
+    parking: str(searchParams.parking) === "true",
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-      <h1 className="text-3xl font-black tracking-tight">Properties in Hubli</h1>
-      <p className="mt-1 text-slate-500 dark:text-slate-400">
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
+      <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+        Properties in Hubli
+      </h1>
+      <p className="mt-1 text-sm text-ink-muted sm:text-base">
         Curated and verified listings — updated by the HubliHomes team.
       </p>
-      <div className="mt-8">
-        <PropertyExplorer
-          properties={properties}
-          localities={localities}
-          initial={initial}
-        />
+      <div className="mt-6 sm:mt-8">
+        <Suspense fallback={<ExplorerFallback />}>
+          <PropertyExplorer
+            properties={properties}
+            localities={localities}
+            initial={initial}
+          />
+        </Suspense>
       </div>
     </div>
   );

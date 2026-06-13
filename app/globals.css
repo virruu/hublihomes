@@ -3,13 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: 250 250 250;
-  --foreground: 15 23 42;
-}
-
-.dark {
-  --background: 9 9 16;
-  --foreground: 241 245 249;
+  --background: 250 248 245;
+  --foreground: 44 40 37;
 }
 
 @layer base {
@@ -21,11 +16,11 @@
 
 @layer components {
   .glass {
-    @apply backdrop-blur-xl bg-white/70 dark:bg-slate-950/60 border-b border-slate-200/70 dark:border-white/10;
+    @apply backdrop-blur-xl bg-white/80 border-b border-brand-100/80;
   }
 
   .card {
-    @apply rounded-3xl border border-slate-200/80 dark:border-white/10 bg-white dark:bg-slate-900/70 shadow-sm hover:shadow-xl transition-all duration-300;
+    @apply rounded-2xl border border-brand-100/60 bg-white shadow-soft hover:shadow-lift transition-all duration-300;
   }
 
   .chip {
@@ -33,20 +28,32 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/25 hover:bg-brand-700 transition-colors;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-soft hover:bg-brand-700 transition-colors;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 dark:border-white/15 px-5 py-3 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-white/5 transition-colors;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-brand-200 px-5 py-3 text-sm font-semibold text-ink hover:bg-brand-50 transition-colors;
+  }
+
+  .sheet {
+    @apply rounded-t-3xl border border-brand-100 bg-white shadow-lift;
+  }
+
+  .prose-property {
+    @apply leading-relaxed text-ink-muted;
+  }
+
+  .prose-property p + p {
+    @apply mt-3;
   }
 }
 
 .skeleton {
   background: linear-gradient(
     90deg,
-    rgba(148, 163, 184, 0.12) 25%,
-    rgba(148, 163, 184, 0.24) 37%,
-    rgba(148, 163, 184, 0.12) 63%
+    rgba(124, 144, 112, 0.06) 25%,
+    rgba(124, 144, 112, 0.12) 37%,
+    rgba(124, 144, 112, 0.06) 63%
   );
   background-size: 400% 100%;
   animation: shimmer 1.4s ease infinite;
@@ -76,6 +83,24 @@
   }
 }
 
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out both;
+}
+
 html {
   scroll-behavior: smooth;
+}
+
+/* Safe area for mobile bottom nav */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }

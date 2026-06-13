@@ -3,23 +3,34 @@ import "server-only";
 import fs from "node:fs";
 import path from "node:path";
 
+import matter from "gray-matter";
+
 import type { Property } from "./types";
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "properties");
 
 let cache: Property[] | null = null;
 
+function parseProperty(file: string): Property {
+  const raw = fs.readFileSync(path.join(CONTENT_DIR, file), "utf8");
+  const { data, content } = matter(raw);
+  const description = content.trim();
+
+  return {
+    ...(data as Omit<Property, "description" | "body">),
+    description,
+    body: description,
+  };
+}
+
 export function getAllProperties(): Property[] {
   if (cache) return cache;
 
   const files = fs
     .readdirSync(CONTENT_DIR)
-    .filter((file) => file.endsWith(".json"));
+    .filter((file) => file.endsWith(".mdx"));
 
-  const properties = files.map((file) => {
-    const raw = fs.readFileSync(path.join(CONTENT_DIR, file), "utf8");
-    return JSON.parse(raw) as Property;
-  });
+  const properties = files.map(parseProperty);
 
   properties.sort((a, b) => {
     if (a.featured !== b.featured) return a.featured ? -1 : 1;
@@ -64,4 +75,8 @@ export function getLocalities(): string[] {
   return Array.from(
     new Set(getAllProperties().map((property) => property.locality)),
   ).sort();
+}
+
+export function clearPropertyCache() {
+  cache = null;
 }

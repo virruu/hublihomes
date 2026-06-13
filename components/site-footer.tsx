@@ -7,37 +7,36 @@ export function SiteFooter() {
   const locationPages = getLocationPages().slice(0, 8);
 
   return (
-    <footer className="mt-20 border-t border-slate-200 bg-white dark:border-white/10 dark:bg-slate-950">
+    <footer className="mt-16 border-t border-brand-100 bg-white sm:mt-20">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-4">
         <div>
-          <span className="text-lg font-extrabold tracking-tight">
+          <span className="text-lg font-bold tracking-tight text-ink">
             Hubli<span className="text-brand-600">Homes</span>
           </span>
-          <p className="mt-3 max-w-xs text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-3 max-w-xs text-sm text-ink-muted">
             {site.description}
           </p>
         </div>
 
         <div>
-          <h4 className="text-sm font-bold uppercase tracking-wide text-slate-500">
+          <h4 className="text-sm font-bold uppercase tracking-wide text-ink-faint">
             Explore
           </h4>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link href="/properties?listing=Rent" className="hover:text-brand-600">Properties for Rent</Link></li>
-            <li><Link href="/properties?listing=Sale" className="hover:text-brand-600">Properties for Sale</Link></li>
-            <li><Link href="/favorites" className="hover:text-brand-600">Saved Favorites</Link></li>
-            <li><a href="/admin/index.html" className="hover:text-brand-600">Admin Dashboard</a></li>
+            <li><Link href="/properties?listing=Rent" className="text-ink-muted hover:text-brand-600">Properties for Rent</Link></li>
+            <li><Link href="/properties?listing=Sale" className="text-ink-muted hover:text-brand-600">Properties for Sale</Link></li>
+            <li><Link href="/favorites" className="text-ink-muted hover:text-brand-600">Saved Favorites</Link></li>
           </ul>
         </div>
 
         <div>
-          <h4 className="text-sm font-bold uppercase tracking-wide text-slate-500">
+          <h4 className="text-sm font-bold uppercase tracking-wide text-ink-faint">
             Popular Searches
           </h4>
           <ul className="mt-4 space-y-2 text-sm">
             {locationPages.map((page) => (
               <li key={page.slug}>
-                <Link href={`/${page.slug}`} className="hover:text-brand-600">
+                <Link href={`/${page.slug}`} className="text-ink-muted hover:text-brand-600">
                   {page.heading}
                 </Link>
               </li>
@@ -46,18 +45,22 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h4 className="text-sm font-bold uppercase tracking-wide text-slate-500">
+          <h4 className="text-sm font-bold uppercase tracking-wide text-ink-faint">
             Contact
           </h4>
-          <ul className="mt-4 space-y-2 text-sm text-slate-500 dark:text-slate-400">
-            <li>{site.phone}</li>
-            <li>{site.email}</li>
+          <ul className="mt-4 space-y-2 text-sm text-ink-muted">
+            <li>
+              <a href={`tel:${site.phone}`} className="hover:text-brand-600">{site.phone}</a>
+            </li>
+            <li>
+              <a href={`mailto:${site.email}`} className="hover:text-brand-600">{site.email}</a>
+            </li>
             <li>Hubli, Karnataka, India</li>
           </ul>
         </div>
       </div>
 
-      <div className="border-t border-slate-200 py-5 text-center text-sm text-slate-500 dark:border-white/10">
+      <div className="border-t border-brand-100 py-5 text-center text-sm text-ink-faint">
         © {new Date().getFullYear()} {site.name}. Curated real estate for Hubli.
       </div>
     </footer>

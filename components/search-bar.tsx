@@ -27,7 +27,7 @@ export function SearchBar() {
   return (
     <form
       onSubmit={submit}
-      className="mx-auto w-full max-w-4xl rounded-3xl border border-white/40 bg-white/90 p-3 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/80"
+      className="mx-auto w-full max-w-4xl rounded-2xl border border-white/30 bg-white/95 p-3 shadow-lift backdrop-blur-xl sm:rounded-3xl sm:p-4"
     >
       <div className="mb-3 flex gap-2">
         {["Rent", "Sale"].map((option) => (
@@ -38,7 +38,7 @@ export function SearchBar() {
             className={`chip ${
               listing === option
                 ? "bg-brand-600 text-white"
-                : "bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-200"
+                : "bg-brand-50 text-ink-muted"
             }`}
           >
             {option === "Rent" ? "Rent" : "Buy"}
@@ -46,9 +46,9 @@ export function SearchBar() {
         ))}
       </div>
 
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <div className="flex flex-1 items-center gap-2 rounded-2xl border border-slate-200 px-3 dark:border-white/10">
-          <PinIcon className="h-5 w-5 text-slate-400" />
+      <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-3">
+        <div className="flex flex-1 items-center gap-2 rounded-xl border border-brand-200 bg-white px-3 sm:rounded-2xl">
+          <PinIcon className="h-5 w-5 shrink-0 text-ink-faint" />
           <select
             value={locality}
             onChange={(event) => setLocality(event.target.value)}
@@ -64,7 +64,7 @@ export function SearchBar() {
           </select>
         </div>
 
-        <div className="flex flex-1 items-center gap-2 rounded-2xl border border-slate-200 px-3 dark:border-white/10">
+        <div className="flex flex-1 items-center gap-2 rounded-xl border border-brand-200 bg-white px-3 sm:rounded-2xl">
           <select
             value={type}
             onChange={(event) => setType(event.target.value)}
@@ -79,7 +79,7 @@ export function SearchBar() {
           </select>
         </div>
 
-        <button type="submit" className="btn-primary justify-center px-8">
+        <button type="submit" className="btn-primary justify-center px-6 sm:px-8">
           <SearchIcon className="h-5 w-5" />
           Search
         </button>

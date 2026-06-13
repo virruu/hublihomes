@@ -19,12 +19,6 @@ export interface Nearby {
   railway: string;
 }
 
-export interface Owner {
-  name: string;
-  phone: string;
-  whatsapp: string;
-}
-
 export interface Faq {
   question: string;
   answer: string;
@@ -51,13 +45,13 @@ export interface Property {
   furnished: Furnishing;
   featured: boolean;
   isNew: boolean;
-  gradient: string;
+  coverImage: string;
   gallery: string[];
   description: string;
+  body: string;
   amenities: string[];
   rules: string[];
   nearby: Nearby;
-  owner: Owner;
   faq: Faq[];
   mapQuery: string;
 }

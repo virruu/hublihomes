@@ -31,7 +31,7 @@ export function FavoritesList({ properties }: { properties: Property[] }) {
     return (
       <div className="card grid place-items-center p-16 text-center">
         <p className="text-lg font-semibold">No favorites yet</p>
-        <p className="mt-1 text-slate-500">
+        <p className="mt-1 text-ink-muted">
           Tap the heart on any property to save it here.
         </p>
         <Link href="/properties" className="btn-primary mt-5">

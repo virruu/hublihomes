@@ -9,7 +9,7 @@ import { PropertyImage } from "./property-image";
 export function Gallery({ property }: { property: Property }) {
   const [active, setActive] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
-  const gallery = property.gallery.length ? property.gallery : [property.gradient];
+  const gallery = property.gallery.length ? property.gallery : [property.coverImage];
 
   return (
     <div>
@@ -21,26 +21,27 @@ export function Gallery({ property }: { property: Property }) {
       >
         <PropertyImage
           property={property}
-          gradient={gallery[active]}
+          src={gallery[active]}
           label={false}
-          className="h-72 w-full rounded-3xl sm:h-[420px]"
+          priority
+          className="h-56 w-full rounded-2xl sm:h-[400px] sm:rounded-3xl"
         />
       </button>
 
-      <div className="mt-3 flex gap-3">
-        {gallery.map((gradient, index) => (
+      <div className="mt-3 flex gap-2 overflow-x-auto pb-1 sm:gap-3">
+        {gallery.map((image, index) => (
           <button
-            key={gradient + index}
+            key={image + index}
             type="button"
             onClick={() => setActive(index)}
             aria-label={`View photo ${index + 1}`}
-            className={`h-16 w-24 overflow-hidden rounded-xl ring-2 transition ${
+            className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-xl ring-2 transition sm:h-16 sm:w-24 ${
               active === index ? "ring-brand-600" : "ring-transparent opacity-70"
             }`}
           >
             <PropertyImage
               property={property}
-              gradient={gradient}
+              src={image}
               label={false}
               className="h-full w-full"
             />
@@ -50,7 +51,7 @@ export function Gallery({ property }: { property: Property }) {
 
       {fullscreen && (
         <div
-          className="fixed inset-0 z-50 grid place-items-center bg-black/85 p-4"
+          className="fixed inset-0 z-50 grid place-items-center bg-ink/90 p-4"
           onClick={() => setFullscreen(false)}
           role="dialog"
           aria-modal="true"
@@ -58,14 +59,14 @@ export function Gallery({ property }: { property: Property }) {
           <div className="w-full max-w-4xl" onClick={(event) => event.stopPropagation()}>
             <PropertyImage
               property={property}
-              gradient={gallery[active]}
+              src={gallery[active]}
               label={false}
               className="h-[60vh] w-full rounded-2xl"
             />
             <div className="mt-4 flex justify-center gap-3">
-              {gallery.map((gradient, index) => (
+              {gallery.map((_, index) => (
                 <button
-                  key={gradient + index}
+                  key={index}
                   type="button"
                   onClick={() => setActive(index)}
                   className={`h-3 w-3 rounded-full ${
