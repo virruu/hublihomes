@@ -3,74 +3,21 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import {
+  countActiveExplorerFilters,
+  EXPLORER_FILTER_DEFAULTS,
+  explorerFiltersToQuery,
+  normalizedExplorerPath,
+  parseExplorerFilters,
+  shouldNormalizeExplorerQuery,
+  type ExplorerFilters,
+} from "@/lib/property-filters";
 import type { Property } from "@/lib/types";
 
 import { CloseIcon, FilterIcon, SearchIcon } from "./icons";
 import { PropertyCard } from "./property-card";
 
-export interface ExplorerFilters {
-  listing: string;
-  type: string;
-  locality: string;
-  bhk: string;
-  budget: number;
-  furnished: string;
-  facing: string;
-  vastu: boolean;
-  veg: boolean;
-  bachelors: boolean;
-  family: boolean;
-  parking: boolean;
-}
-
-const defaults: ExplorerFilters = {
-  listing: "Any",
-  type: "Any",
-  locality: "Any",
-  bhk: "Any",
-  budget: 0,
-  furnished: "Any",
-  facing: "Any",
-  vastu: false,
-  veg: false,
-  bachelors: false,
-  family: false,
-  parking: false,
-};
-
-function filtersFromParams(params: URLSearchParams): ExplorerFilters {
-  return {
-    listing: params.get("listing") ?? "Any",
-    type: params.get("type") ?? "Any",
-    locality: params.get("locality") ?? "Any",
-    bhk: params.get("bhk") ?? "Any",
-    budget: Number(params.get("budget") ?? 0),
-    furnished: params.get("furnished") ?? "Any",
-    facing: params.get("facing") ?? "Any",
-    vastu: params.get("vastu") === "true",
-    veg: params.get("veg") === "Yes",
-    bachelors: params.get("bachelors") === "Allowed",
-    family: params.get("family") === "Preferred",
-    parking: params.get("parking") === "true",
-  };
-}
-
-function filtersToParams(filters: ExplorerFilters): string {
-  const params = new URLSearchParams();
-  if (filters.listing !== "Any") params.set("listing", filters.listing);
-  if (filters.type !== "Any") params.set("type", filters.type);
-  if (filters.locality !== "Any") params.set("locality", filters.locality);
-  if (filters.bhk !== "Any") params.set("bhk", filters.bhk);
-  if (filters.budget > 0) params.set("budget", String(filters.budget));
-  if (filters.furnished !== "Any") params.set("furnished", filters.furnished);
-  if (filters.facing !== "Any") params.set("facing", filters.facing);
-  if (filters.vastu) params.set("vastu", "true");
-  if (filters.veg) params.set("veg", "Yes");
-  if (filters.bachelors) params.set("bachelors", "Allowed");
-  if (filters.family) params.set("family", "Preferred");
-  if (filters.parking) params.set("parking", "true");
-  return params.toString();
-}
+export type { ExplorerFilters };
 
 function Select({
   label,
@@ -201,20 +148,7 @@ function FilterPanel({
 }
 
 function countActiveFilters(filters: ExplorerFilters): number {
-  let count = 0;
-  if (filters.listing !== "Any") count++;
-  if (filters.type !== "Any") count++;
-  if (filters.locality !== "Any") count++;
-  if (filters.bhk !== "Any") count++;
-  if (filters.budget > 0) count++;
-  if (filters.furnished !== "Any") count++;
-  if (filters.facing !== "Any") count++;
-  if (filters.vastu) count++;
-  if (filters.veg) count++;
-  if (filters.bachelors) count++;
-  if (filters.family) count++;
-  if (filters.parking) count++;
-  return count;
+  return countActiveExplorerFilters(filters);
 }
 
 export function PropertyExplorer({
@@ -223,29 +157,31 @@ export function PropertyExplorer({
   localities,
 }: {
   properties: Property[];
-  initial: Partial<ExplorerFilters>;
+  initial: ExplorerFilters;
   localities: string[];
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [filters, setFilters] = useState<ExplorerFilters>({
-    ...defaults,
-    ...initial,
-  });
+  const [filters, setFilters] = useState<ExplorerFilters>(initial);
   const [sort, setSort] = useState("relevance");
   const [sheetOpen, setSheetOpen] = useState(false);
 
   const syncToUrl = useCallback(
     (next: ExplorerFilters) => {
-      const qs = filtersToParams(next);
+      const qs = explorerFiltersToQuery(next);
       router.replace(qs ? `/properties?${qs}` : "/properties", { scroll: false });
     },
     [router],
   );
 
   useEffect(() => {
-    setFilters(filtersFromParams(searchParams));
-  }, [searchParams]);
+    const sanitized = parseExplorerFilters(searchParams, localities);
+    setFilters(sanitized);
+
+    if (shouldNormalizeExplorerQuery(searchParams, localities)) {
+      router.replace(normalizedExplorerPath(searchParams, localities), { scroll: false });
+    }
+  }, [searchParams, localities, router]);
 
   function update<K extends keyof ExplorerFilters>(key: K, value: ExplorerFilters[K]) {
     setFilters((prev) => {
@@ -256,8 +192,8 @@ export function PropertyExplorer({
   }
 
   function resetFilters() {
-    setFilters(defaults);
-    syncToUrl(defaults);
+    setFilters(EXPLORER_FILTER_DEFAULTS);
+    syncToUrl(EXPLORER_FILTER_DEFAULTS);
   }
 
   const activeCount = countActiveFilters(filters);
