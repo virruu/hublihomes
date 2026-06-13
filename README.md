@@ -72,3 +72,20 @@ The Decap CMS dashboard lives at `/admin/index.html`.
 ## Deployment (Netlify)
 
 `netlify.toml` is preconfigured. Connect the repo to Netlify; the build command is `npm run build` with the official `@netlify/plugin-nextjs`. Enable Netlify Identity + Git Gateway to use the admin dashboard in production.
+
+### Secure the admin (required)
+
+By default, Netlify Identity registration is **Open**, which means anyone can create an account and edit listings through the CMS. Lock this down:
+
+1. **Netlify dashboard → Site configuration → Identity → Registration → Registration preferences**
+2. Set to **Invite only** (not Open)
+3. **Identity → Users** — delete any accounts you did not invite
+4. Invite editors only via **Identity → Users → Invite users**
+
+Git Gateway grants CMS access to every logged-in Identity user, so invite-only registration is what restricts who can edit. No environment variables are used for admin auth.
+
+### Admin login (no env vars)
+
+1. Invite your email under **Identity → Users**
+2. Open the invite email and set your password (the link lands on the homepage)
+3. Log in at `/admin/index.html` with that email and password
