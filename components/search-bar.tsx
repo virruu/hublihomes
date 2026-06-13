@@ -52,7 +52,7 @@ export function SearchBar() {
           <select
             value={locality}
             onChange={(event) => setLocality(event.target.value)}
-            className="w-full bg-transparent py-3 text-sm outline-none"
+            className="w-full bg-transparent py-3 text-sm text-ink outline-none"
             aria-label="Locality"
           >
             <option value="">Any locality</option>
@@ -68,7 +68,7 @@ export function SearchBar() {
           <select
             value={type}
             onChange={(event) => setType(event.target.value)}
-            className="w-full bg-transparent py-3 text-sm outline-none"
+            className="w-full bg-transparent py-3 text-sm text-ink outline-none"
             aria-label="Property type"
           >
             {types.map((option) => (
