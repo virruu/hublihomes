@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { sanitizeSearchExcerpt } from "@/lib/sanitize-html";
+
 import { CloseIcon, SearchIcon } from "./icons";
 
 type PagefindResult = {
@@ -160,7 +162,9 @@ export function SiteSearch({
                     </p>
                     <p
                       className="mt-0.5 text-sm text-ink-muted line-clamp-2"
-                      dangerouslySetInnerHTML={{ __html: result.excerpt }}
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizeSearchExcerpt(result.excerpt),
+                      }}
                     />
                   </a>
                 ))}

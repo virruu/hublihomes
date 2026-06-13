@@ -12,7 +12,7 @@
     var originalOpen = identity.open.bind(identity);
     identity.open = function (mode, options) {
       var hasInviteFlow = INVITE_HASH.test(window.location.hash || "");
-      if (!hasInviteFlow && (!mode || mode === "signup")) {
+      if (!hasInviteFlow && mode !== "login") {
         mode = "login";
       }
       return originalOpen(mode, options);
