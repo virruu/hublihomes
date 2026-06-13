@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { PropertyBadges } from "@/components/badges";
 import { FavoriteButton } from "@/components/favorite-button";
 import { Gallery } from "@/components/gallery";
 import { AreaIcon, BathIcon, BedIcon, CheckIcon, PhoneIcon, PinIcon, WhatsAppIcon } from "@/components/icons";
 import { JsonLd } from "@/components/jsonld";
+import { PropertyBody } from "@/components/property-body";
 import { PropertyCard } from "@/components/property-card";
 import { RecordView } from "@/components/record-view";
 import { ShareButton } from "@/components/share-button";
@@ -47,6 +49,7 @@ export function generateMetadata({
       description,
       url: `${site.url}/properties/${property.slug}`,
       type: "website",
+      images: [{ url: property.coverImage }],
     },
   };
 }
@@ -61,14 +64,48 @@ function Highlight({
   value: string;
 }) {
   return (
-    <div className="card flex items-center gap-3 p-4">
-      <span className="grid h-10 w-10 place-items-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-600/20">
-        {icon}
-      </span>
-      <div>
-        <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
-        <p className="font-semibold">{value}</p>
+    <div className="rounded-xl border border-brand-100 bg-surface-muted/50 p-3 sm:p-4">
+      <div className="flex items-center gap-2.5">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-600 sm:h-10 sm:w-10 sm:rounded-xl">
+          {icon}
+        </span>
+        <div className="min-w-0">
+          <p className="text-[11px] text-ink-faint sm:text-xs">{label}</p>
+          <p className="truncate text-sm font-semibold text-ink sm:text-base">{value}</p>
+        </div>
       </div>
+    </div>
+  );
+}
+
+function ContactCard({ property }: { property: NonNullable<ReturnType<typeof getProperty>> }) {
+  const waText = encodeURIComponent(
+    `Hi, I'm interested in "${property.title}" (${formatPrice(property)}) listed on HubliHomes.`,
+  );
+
+  return (
+    <div className="card p-5 sm:p-6">
+      <p className="text-sm text-ink-muted">
+        {property.listing === "Rent" ? "Monthly rent" : "Sale price"}
+      </p>
+      <p className="text-2xl font-bold text-brand-700 sm:text-3xl">{formatPrice(property)}</p>
+      <p className="mt-1 text-sm text-ink-muted">Listed by HubliHomes</p>
+
+      <a href={`tel:${site.phone}`} className="btn-primary mt-5 w-full justify-center">
+        <PhoneIcon className="h-5 w-5" /> Call Us
+      </a>
+      <a
+        href={`https://wa.me/${site.whatsapp}?text=${waText}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-soft transition-colors hover:brightness-95"
+      >
+        <WhatsAppIcon className="h-5 w-5" /> WhatsApp Us
+      </a>
+
+      <p className="mt-4 text-center text-xs text-ink-faint">
+        Curated listing — reach out to us for details and visits.
+      </p>
     </div>
   );
 }
@@ -78,9 +115,6 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
   if (!property) notFound();
 
   const similar = getSimilarProperties(property, 3);
-  const waText = encodeURIComponent(
-    `Hi, I'm interested in "${property.title}" (${formatPrice(property)}) listed on HubliHomes.`,
-  );
 
   const breadcrumb = [
     { name: "Home", url: site.url },
@@ -89,49 +123,58 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
   ];
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-7xl px-4 py-5 pb-28 sm:px-6 sm:py-8 lg:pb-8">
       <RecordView slug={property.slug} />
       <JsonLd data={residenceSchema(property)} />
       <JsonLd data={breadcrumbSchema(breadcrumb)} />
       <JsonLd data={faqSchema(property.faq)} />
 
-      <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
+      <nav className="mb-3 flex flex-wrap items-center gap-1.5 text-sm text-ink-faint">
         <Link href="/" className="hover:text-brand-600">Home</Link>
         <span>/</span>
         <Link href="/properties" className="hover:text-brand-600">Properties</Link>
         <span>/</span>
-        <span className="text-slate-900 dark:text-white">{property.locality}</span>
+        <span className="text-ink">{property.locality}</span>
       </nav>
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
+      <div className="grid gap-6 lg:grid-cols-[1fr_340px] lg:gap-8">
         <div>
           <Gallery property={property} />
 
-          <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
-            <div>
+          <div className="mt-4 flex flex-wrap items-start justify-between gap-3 sm:mt-6">
+            <div className="min-w-0 flex-1">
               <PropertyBadges property={property} />
-              <h1 className="mt-2 text-3xl font-black tracking-tight">{property.title}</h1>
-              <p className="mt-1 flex items-center gap-1 text-slate-500 dark:text-slate-400">
-                <PinIcon className="h-4 w-4" /> {property.locality}, {property.city}, Karnataka
+              <h1 className="mt-2 text-xl font-bold tracking-tight text-ink sm:text-3xl">
+                {property.title}
+              </h1>
+              <p className="mt-1 flex items-center gap-1 text-sm text-ink-muted">
+                <PinIcon className="h-4 w-4 shrink-0" />
+                {property.locality}, {property.city}, Karnataka
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <FavoriteButton slug={property.slug} className="h-11 w-11" />
+              <FavoriteButton slug={property.slug} className="h-10 w-10 sm:h-11 sm:w-11" />
               <ShareButton title={property.title} />
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <Highlight icon={<BedIcon className="h-5 w-5" />} label="Configuration" value={bhkLabel(property)} />
-            <Highlight icon={<BathIcon className="h-5 w-5" />} label="Bathrooms" value={property.bathrooms ? `${property.bathrooms}` : "—"} />
-            <Highlight icon={<AreaIcon className="h-5 w-5" />} label="Built-up area" value={`${property.area} sqft`} />
-            <Highlight icon={<CheckIcon className="h-5 w-5" />} label="Facing" value={property.facing} />
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-6 sm:gap-3 sm:grid-cols-4">
+            <Highlight icon={<BedIcon className="h-4 w-4 sm:h-5 sm:w-5" />} label="Configuration" value={bhkLabel(property)} />
+            <Highlight icon={<BathIcon className="h-4 w-4 sm:h-5 sm:w-5" />} label="Bathrooms" value={property.bathrooms ? `${property.bathrooms}` : "—"} />
+            <Highlight icon={<AreaIcon className="h-4 w-4 sm:h-5 sm:w-5" />} label="Built-up area" value={`${property.area} sqft`} />
+            <Highlight icon={<CheckIcon className="h-4 w-4 sm:h-5 sm:w-5" />} label="Facing" value={property.facing} />
           </div>
 
-          <section className="mt-8">
-            <h2 className="text-xl font-bold">Overview</h2>
-            <p className="mt-2 leading-relaxed text-slate-600 dark:text-slate-300">{property.description}</p>
-            <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-3">
+          <div className="mt-4 lg:hidden">
+            <ContactCard property={property} />
+          </div>
+
+          <section className="mt-6 sm:mt-8">
+            <h2 className="text-lg font-bold text-ink sm:text-xl">Overview</h2>
+            <div className="mt-2">
+              <PropertyBody content={property.body} />
+            </div>
+            <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
               <KeyValue label="Listing" value={property.listing === "Rent" ? "For Rent" : "For Sale"} />
               <KeyValue label="Furnishing" value={property.furnished} />
               <KeyValue label="Parking" value={property.parking} />
@@ -141,30 +184,30 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
             </div>
           </section>
 
-          <section className="mt-8">
-            <h2 className="text-xl font-bold">Amenities</h2>
-            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <section className="mt-6 sm:mt-8">
+            <h2 className="text-lg font-bold text-ink sm:text-xl">Amenities</h2>
+            <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {property.amenities.map((amenity) => (
-                <span key={amenity} className="flex items-center gap-2 rounded-xl bg-slate-50 px-3 py-2 text-sm dark:bg-white/5">
-                  <CheckIcon className="h-4 w-4 text-emerald-500" /> {amenity}
+                <span key={amenity} className="flex items-center gap-2 rounded-xl bg-brand-50/60 px-3 py-2.5 text-sm text-ink">
+                  <CheckIcon className="h-4 w-4 shrink-0 text-brand-600" /> {amenity}
                 </span>
               ))}
             </div>
           </section>
 
-          <section className="mt-8">
-            <h2 className="text-xl font-bold">Rules &amp; preferences</h2>
+          <section className="mt-6 sm:mt-8">
+            <h2 className="text-lg font-bold text-ink sm:text-xl">Rules &amp; preferences</h2>
             <div className="mt-3 flex flex-wrap gap-2">
               {property.rules.map((rule) => (
-                <span key={rule} className="chip bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-200">
+                <span key={rule} className="chip bg-surface-muted text-ink-muted">
                   {rule}
                 </span>
               ))}
             </div>
           </section>
 
-          <section className="mt-8">
-            <h2 className="text-xl font-bold">What&apos;s nearby</h2>
+          <section className="mt-6 sm:mt-8">
+            <h2 className="text-lg font-bold text-ink sm:text-xl">What&apos;s nearby</h2>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
               <NearbyCard title="Schools" items={property.nearby.schools} />
               <NearbyCard title="Hospitals" items={property.nearby.hospitals} />
@@ -173,91 +216,89 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
             </div>
           </section>
 
-          <section className="mt-8">
-            <h2 className="text-xl font-bold">Location</h2>
+          <section className="mt-6 sm:mt-8">
+            <h2 className="text-lg font-bold text-ink sm:text-xl">Location</h2>
             <iframe
               title="Map"
-              className="mt-3 h-64 w-full rounded-2xl border border-slate-200 dark:border-white/10"
+              className="mt-3 h-48 w-full rounded-2xl border border-brand-100 sm:h-64"
               loading="lazy"
               src={`https://maps.google.com/maps?q=${encodeURIComponent(property.mapQuery)}&output=embed`}
             />
           </section>
 
-          <section className="mt-8">
-            <h2 className="text-xl font-bold">Frequently asked questions</h2>
-            <div className="mt-3 divide-y divide-slate-200 rounded-2xl border border-slate-200 dark:divide-white/10 dark:border-white/10">
+          <section className="mt-6 sm:mt-8">
+            <h2 className="text-lg font-bold text-ink sm:text-xl">Frequently asked questions</h2>
+            <div className="mt-3 divide-y divide-brand-100 rounded-2xl border border-brand-100">
               {property.faq.map((entry) => (
                 <details key={entry.question} className="group p-4">
-                  <summary className="cursor-pointer list-none font-semibold marker:hidden">
+                  <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden">
                     {entry.question}
                   </summary>
-                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{entry.answer}</p>
+                  <p className="mt-2 text-sm text-ink-muted">{entry.answer}</p>
                 </details>
               ))}
             </div>
           </section>
         </div>
 
-        <aside className="lg:sticky lg:top-20 lg:h-fit">
-          <div className="card p-6">
-            <p className="text-sm text-slate-500 dark:text-slate-400">
-              {property.listing === "Rent" ? "Monthly rent" : "Sale price"}
-            </p>
-            <p className="text-3xl font-black text-brand-600">{formatPrice(property)}</p>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              Listed by {property.owner.name}
-            </p>
-
-            <a href={`tel:${property.owner.phone}`} className="btn-primary mt-5 w-full justify-center">
-              <PhoneIcon className="h-5 w-5" /> Call Owner
-            </a>
-            <a
-              href={`https://wa.me/${property.owner.whatsapp}?text=${waText}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition-colors hover:brightness-95"
-            >
-              <WhatsAppIcon className="h-5 w-5" /> WhatsApp Inquiry
-            </a>
-
-            <p className="mt-4 text-center text-xs text-slate-400">
-              No brokerage. Direct owner contact.
-            </p>
-          </div>
+        <aside className="hidden lg:sticky lg:top-20 lg:block lg:h-fit">
+          <ContactCard property={property} />
         </aside>
       </div>
 
       {similar.length > 0 && (
-        <section className="mt-14">
-          <h2 className="text-2xl font-bold">Similar properties</h2>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="mt-10 sm:mt-14">
+          <h2 className="text-xl font-bold text-ink sm:text-2xl">Similar properties</h2>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
             {similar.map((item) => (
               <PropertyCard key={item.slug} property={item} />
             ))}
           </div>
         </section>
       )}
+
+      <div className="fixed inset-x-0 bottom-16 z-30 border-t border-brand-100 bg-white/95 p-3 backdrop-blur-xl lg:hidden">
+        <div className="mx-auto flex max-w-lg items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] text-ink-faint">Listed by HubliHomes</p>
+            <p className="text-xs text-ink-faint">{property.listing === "Rent" ? "Rent" : "Price"}</p>
+            <p className="truncate text-lg font-bold text-brand-700">{formatPrice(property)}</p>
+          </div>
+          <a href={`tel:${site.phone}`} className="btn-primary shrink-0 px-4 py-2.5 text-sm">
+            <PhoneIcon className="h-4 w-4" /> Call Us
+          </a>
+          <a
+            href={`https://wa.me/${site.whatsapp}?text=${encodeURIComponent(`Hi, I'm interested in "${property.title}" on HubliHomes.`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#25D366] text-white"
+            aria-label="WhatsApp us"
+          >
+            <WhatsAppIcon className="h-5 w-5" />
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
 
 function KeyValue({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between border-b border-slate-100 py-1.5 dark:border-white/5">
-      <span className="text-slate-500 dark:text-slate-400">{label}</span>
-      <span className="font-medium">{value}</span>
+    <div className="flex justify-between border-b border-brand-50 py-2">
+      <span className="text-ink-muted">{label}</span>
+      <span className="font-medium text-ink">{value}</span>
     </div>
   );
 }
 
 function NearbyCard({ title, items }: { title: string; items: string[] }) {
   return (
-    <div className="card p-4">
-      <p className="text-sm font-bold">{title}</p>
-      <ul className="mt-2 space-y-1 text-sm text-slate-600 dark:text-slate-300">
+    <div className="rounded-xl border border-brand-100 bg-white p-4">
+      <p className="text-sm font-bold text-ink">{title}</p>
+      <ul className="mt-2 space-y-1 text-sm text-ink-muted">
         {items.map((item) => (
-          <li key={item} className="flex items-center gap-2">
-            <PinIcon className="h-4 w-4 text-brand-600" /> {item}
+          <li key={item} className="flex items-start gap-2">
+            <PinIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" /> {item}
           </li>
         ))}
       </ul>

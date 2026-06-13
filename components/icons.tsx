@@ -123,3 +123,36 @@ export function ShareIcon(props: IconProps) {
     </svg>
   );
 }
+
+export function CloseIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M18 6 6 18M6 6l12 12" />
+    </svg>
+  );
+}
+
+export function HomeIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <path d="M9 22V12h6v10" />
+    </svg>
+  );
+}
+
+export function MenuIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  );
+}
+
+export function FilterIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3Z" />
+    </svg>
+  );
+}

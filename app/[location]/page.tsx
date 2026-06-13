@@ -44,30 +44,30 @@ export default function LocationPage({
   const properties = getLocationPageProperties(page);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", url: site.url },
           { name: page.heading, url: `${site.url}/${page.slug}` },
         ])}
       />
-      <nav className="mb-3 text-sm text-slate-500">
+      <nav className="mb-3 text-sm text-ink-faint">
         <Link href="/" className="hover:text-brand-600">Home</Link>
         <span className="px-1.5">/</span>
-        <span className="text-slate-900 dark:text-white">{page.heading}</span>
+        <span className="text-ink">{page.heading}</span>
       </nav>
-      <h1 className="text-3xl font-black tracking-tight">{page.heading}</h1>
-      <p className="mt-2 max-w-2xl text-slate-500 dark:text-slate-400">
+      <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">{page.heading}</h1>
+      <p className="mt-2 max-w-2xl text-sm text-ink-muted sm:text-base">
         {page.description}
       </p>
 
-      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
         {properties.map((property) => (
           <PropertyCard key={property.slug} property={property} />
         ))}
       </div>
 
-      <div className="mt-10">
+      <div className="mt-8 sm:mt-10">
         <Link href="/properties" className="btn-ghost">
           Browse all properties
         </Link>
