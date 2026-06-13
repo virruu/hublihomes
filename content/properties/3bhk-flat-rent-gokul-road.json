@@ -1,0 +1,48 @@
+{
+  "slug": "3bhk-flat-rent-gokul-road",
+  "title": "3 BHK Flat for Rent near Gokul Road",
+  "listing": "Rent",
+  "propertyType": "Flat",
+  "bhk": 3,
+  "price": 26000,
+  "priceSuffix": "/month",
+  "area": 1450,
+  "locality": "Gokul Road",
+  "city": "Hubli",
+  "facing": "North",
+  "vastu": true,
+  "vegetarian": "Not Required",
+  "bachelors": "Allowed",
+  "family": "Preferred",
+  "parking": "Covered Car Parking",
+  "bathrooms": 3,
+  "furnished": "Fully Furnished",
+  "featured": true,
+  "isNew": false,
+  "gradient": "from-sky-400 via-blue-500 to-indigo-600",
+  "gallery": [
+    "from-sky-400 via-blue-500 to-indigo-600",
+    "from-blue-300 to-cyan-600",
+    "from-indigo-400 to-blue-700"
+  ],
+  "description": "A fully furnished 3 BHK flat in a gated community close to Gokul Road IT corridor. Comes with a clubhouse, gym and children's play area. Ideal for working professionals and families who want a low-maintenance premium lifestyle.",
+  "amenities": ["Lift", "24x7 Security", "Gym", "Clubhouse", "Children's Play Area", "Power Backup", "Cauvery Water"],
+  "rules": ["Bachelors Allowed", "Family Preferred", "Pets Allowed"],
+  "nearby": {
+    "schools": ["Lions School", "Vidya Niketan"],
+    "hospitals": ["Tatwadarsha Hospital", "SDM Medical College"],
+    "busStop": "Gokul Road Cross (500 m)",
+    "railway": "Hubballi Junction (6.0 km)"
+  },
+  "owner": {
+    "name": "Anjali Kulkarni",
+    "phone": "+919900000002",
+    "whatsapp": "919900000002"
+  },
+  "faq": [
+    { "question": "Is the flat furnished?", "answer": "Yes, it is fully furnished including beds, sofa, wardrobes and kitchen appliances." },
+    { "question": "Are pets allowed?", "answer": "Yes, pets are allowed in this community." },
+    { "question": "Is covered parking available?", "answer": "Yes, one covered car parking slot is allotted." }
+  ],
+  "mapQuery": "Gokul Road, Hubli, Karnataka"
+}
