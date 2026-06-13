@@ -180,3 +180,183 @@ export function normalizedExplorerPath(
   const query = explorerFiltersToQuery(parseExplorerFilters(params, localities));
   return query ? `/properties?${query}` : "/properties";
 }
+
+export const BROWSE_DEFAULT_DESCRIPTION =
+  "Search and filter curated houses, flats, villas, plots and PGs for rent and sale across Hubli with rich filters for Vastu, vegetarian, bachelor and family preferences.";
+
+function pluralTypeLabel(type: string): string {
+  if (type === "Any") return "Properties";
+  if (type === "PG") return "PG";
+  return `${type}s`;
+}
+
+function listingPhrase(listing: string): string | null {
+  if (listing === "Rent") return "for Rent";
+  if (listing === "Sale") return "for Sale";
+  return null;
+}
+
+function bhkPhrase(bhk: string): string | null {
+  if (bhk === "Any") return null;
+  return bhk === "4+" ? "4+ BHK" : `${bhk} BHK`;
+}
+
+export function hasSecondaryExplorerFilters(filters: ExplorerFilters): boolean {
+  return (
+    filters.budget > 0 ||
+    filters.furnished !== "Any" ||
+    filters.facing !== "Any" ||
+    filters.vastu ||
+    filters.veg ||
+    filters.bachelors ||
+    filters.family ||
+    filters.parking
+  );
+}
+
+export function getPrimaryExplorerFilters(filters: ExplorerFilters): ExplorerFilters {
+  return {
+    ...filters,
+    budget: 0,
+    furnished: "Any",
+    facing: "Any",
+    vastu: false,
+    veg: false,
+    bachelors: false,
+    family: false,
+    parking: false,
+  };
+}
+
+export function isIndexableExplorerFilters(filters: ExplorerFilters): boolean {
+  return hasActiveExplorerFilters(filters) && !hasSecondaryExplorerFilters(filters);
+}
+
+function buildExplorerDescription(filters: ExplorerFilters, heading: string): string {
+  const lead = `Browse curated ${heading.charAt(0).toLowerCase()}${heading.slice(1)} on HubliHomes.`;
+
+  const extras: string[] = [];
+  if (filters.furnished !== "Any") extras.push(filters.furnished.toLowerCase());
+  if (filters.facing !== "Any") extras.push(`${filters.facing.toLowerCase()}-facing`);
+  if (filters.budget > 0) {
+    extras.push(`within \u20B9${filters.budget.toLocaleString("en-IN")} budget`);
+  }
+  if (filters.vastu) extras.push("Vastu compliant");
+  if (filters.veg) extras.push("vegetarian-friendly");
+  if (filters.bachelors) extras.push("bachelor friendly");
+  if (filters.family) extras.push("family preferred");
+  if (filters.parking) extras.push("with parking");
+
+  const tail =
+    "Verified details on parking, water supply, bachelor and family preferences.";
+
+  if (extras.length === 0) return `${lead} ${tail}`;
+
+  return `${lead} Filtered for ${extras.join(", ")}. ${tail}`;
+}
+
+export function getExplorerPageCopy(filters: ExplorerFilters): {
+  title: string;
+  heading: string;
+  description: string;
+} {
+  const metadataFilters = hasSecondaryExplorerFilters(filters)
+    ? getPrimaryExplorerFilters(filters)
+    : filters;
+
+  if (!hasActiveExplorerFilters(metadataFilters)) {
+    return {
+      title: "Browse Properties in Hubli",
+      heading: "Properties in Hubli",
+      description: BROWSE_DEFAULT_DESCRIPTION,
+    };
+  }
+
+  const typeLabel = pluralTypeLabel(metadataFilters.type);
+  const listing = listingPhrase(metadataFilters.listing);
+  const locality =
+    metadataFilters.locality !== "Any" ? metadataFilters.locality : null;
+  const bhk = bhkPhrase(metadataFilters.bhk);
+
+  let subject = typeLabel;
+  if (metadataFilters.type !== "Any") {
+    subject = bhk ? `${bhk} ${typeLabel}` : typeLabel;
+  } else if (bhk) {
+    subject = `${bhk} Properties`;
+  } else {
+    subject = "Properties";
+  }
+
+  let heading: string;
+  if (locality && listing) {
+    heading = `${subject} ${listing} in ${locality}`;
+  } else if (locality) {
+    heading = `${subject} in ${locality}`;
+  } else if (listing) {
+    heading = `${subject} ${listing} in Hubli`;
+  } else {
+    heading = `${subject} in Hubli`;
+  }
+
+  const title = locality ? `${heading}, Hubli` : heading;
+
+  return {
+    title,
+    heading,
+    description: buildExplorerDescription(filters, heading),
+  };
+}
+
+export function getExplorerCanonicalPath(filters: ExplorerFilters): string {
+  const canonicalFilters = hasSecondaryExplorerFilters(filters)
+    ? getPrimaryExplorerFilters(filters)
+    : filters;
+
+  if (!hasActiveExplorerFilters(canonicalFilters)) {
+    return "/properties";
+  }
+
+  const query = explorerFiltersToQuery(canonicalFilters);
+  return query ? `/properties?${query}` : "/properties";
+}
+
+export function getBrowseSitemapPaths(localities: string[]): string[] {
+  const paths = new Set<string>(["/properties"]);
+
+  for (const listing of LISTING_OPTIONS) {
+    if (listing === "Any") continue;
+    paths.add(getExplorerCanonicalPath({ ...EXPLORER_FILTER_DEFAULTS, listing }));
+  }
+
+  for (const type of TYPE_OPTIONS) {
+    if (type === "Any") continue;
+    paths.add(getExplorerCanonicalPath({ ...EXPLORER_FILTER_DEFAULTS, type }));
+  }
+
+  for (const listing of LISTING_OPTIONS) {
+    if (listing === "Any") continue;
+    for (const type of TYPE_OPTIONS) {
+      if (type === "Any") continue;
+      paths.add(
+        getExplorerCanonicalPath({
+          ...EXPLORER_FILTER_DEFAULTS,
+          listing,
+          type,
+        }),
+      );
+    }
+  }
+
+  for (const locality of localities) {
+    paths.add(
+      getExplorerCanonicalPath({ ...EXPLORER_FILTER_DEFAULTS, locality }),
+    );
+  }
+
+  for (const bhk of BHK_OPTIONS) {
+    if (bhk === "Any") continue;
+    paths.add(getExplorerCanonicalPath({ ...EXPLORER_FILTER_DEFAULTS, bhk }));
+  }
+
+  return Array.from(paths);
+}
