@@ -29,7 +29,11 @@ export function generateMetadata({
     title: page.title,
     description: page.description,
     alternates: { canonical: `/${page.slug}` },
-    openGraph: { title: page.title, description: page.description },
+    openGraph: {
+      title: page.title,
+      description: page.description,
+      url: `${site.url}/${page.slug}`,
+    },
   };
 }
 
@@ -44,7 +48,7 @@ export default function LocationPage({
   const properties = getLocationPageProperties(page);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10" data-pagefind-body>
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", url: site.url },

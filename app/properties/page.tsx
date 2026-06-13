@@ -3,11 +3,19 @@ import { Suspense } from "react";
 
 import { PropertyExplorer, type ExplorerFilters } from "@/components/property-explorer";
 import { getAllProperties, getLocalities } from "@/lib/properties";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Browse Properties in Hubli",
   description:
     "Search and filter curated houses, flats, villas, plots and PGs for rent and sale across Hubli with rich filters for Vastu, vegetarian, bachelor and family preferences.",
+  alternates: { canonical: "/properties" },
+  openGraph: {
+    title: "Browse Properties in Hubli",
+    description:
+      "Search and filter curated houses, flats, villas, plots and PGs for rent and sale across Hubli with rich filters for Vastu, vegetarian, bachelor and family preferences.",
+    url: `${site.url}/properties`,
+  },
 };
 
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -44,7 +52,7 @@ export default function PropertiesPage({
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10" data-pagefind-body>
       <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
         Properties in Hubli
       </h1>

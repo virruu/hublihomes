@@ -37,7 +37,7 @@ export function generateMetadata({
   if (property.vastu) tags.push("Vastu");
   const tagLabel = tags.length ? ` | ${tags.join(" & ")}` : "";
 
-  const title = `${property.title}, ${property.locality} Hubli${tagLabel}`;
+  const title = `${property.title}, Hubli${tagLabel}`;
   const description = `${formatPrice(property)} · ${bhkLabel(property)} · ${property.area} sqft · ${property.facing} facing in ${property.locality}, Hubli. ${property.description}`;
 
   return {
@@ -137,7 +137,7 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
         <span className="text-ink">{property.locality}</span>
       </nav>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_340px] lg:gap-8">
+      <div className="grid gap-6 lg:grid-cols-[1fr_340px] lg:gap-8" data-pagefind-body>
         <div>
           <Gallery property={property} />
 
