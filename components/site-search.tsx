@@ -2,23 +2,35 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { CloseIcon, SearchIcon } from "./icons";
+import type { SiteSearchResult } from "@/lib/site-search-data";
 
-type PagefindResult = {
-  url: string;
-  meta: { title?: string };
-  excerpt: string;
-};
+import { CloseIcon, SearchIcon } from "./icons";
 
 type PagefindAPI = {
   init: () => Promise<void>;
-  search: (q: string) => Promise<{ results: { data: () => Promise<PagefindResult> }[] }>;
+  search: (
+    q: string,
+  ) => Promise<{ results: { data: () => Promise<SiteSearchResult> }[] }>;
 };
 
-declare global {
-  interface Window {
-    pagefind?: PagefindAPI;
+async function loadPagefind(): Promise<PagefindAPI | null> {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const moduleUrl = new URL("/pagefind/pagefind.js", window.location.origin).href;
+    const pf = (await import(/* webpackIgnore: true */ moduleUrl)) as PagefindAPI;
+    await pf.init();
+    return pf;
+  } catch {
+    return null;
   }
+}
+
+async function searchViaApi(query: string): Promise<SiteSearchResult[]> {
+  const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+  if (!response.ok) return [];
+  const data = (await response.json()) as { results: SiteSearchResult[] };
+  return data.results;
 }
 
 export function SiteSearch({
@@ -28,63 +40,73 @@ export function SiteSearch({
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<PagefindResult[]>([]);
+  const [results, setResults] = useState<SiteSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searchReady, setSearchReady] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const pagefindRef = useRef<PagefindAPI | null>(null);
+  const useApiFallbackRef = useRef(false);
 
   useEffect(() => {
-    if (!open) return;
-    inputRef.current?.focus();
-
-    async function loadPagefind() {
-      if (pagefindRef.current) return;
-      try {
-        if (window.pagefind) {
-          const existing = window.pagefind as PagefindAPI;
-          await existing.init();
-          pagefindRef.current = existing;
-          return;
-        }
-        await new Promise<void>((resolve, reject) => {
-          const script = document.createElement("script");
-          script.src = "/pagefind/pagefind.js";
-          script.onload = () => resolve();
-          script.onerror = () => reject(new Error("Failed to load pagefind"));
-          document.head.appendChild(script);
-        });
-        const pf = (window as Window).pagefind as PagefindAPI | undefined;
-        if (!pf) return;
-        await pf.init();
-        pagefindRef.current = pf;
-      } catch {
-        // Pagefind index is generated at build time
-      }
-    }
-
-    loadPagefind();
-  }, [open]);
-
-  useEffect(() => {
-    if (!open || !query.trim()) {
-      setResults([]);
+    if (!open) {
+      setSearchReady(false);
       return;
     }
 
+    inputRef.current?.focus();
+    let cancelled = false;
+
+    async function prepareSearch() {
+      const pagefind = await loadPagefind();
+      if (cancelled) return;
+
+      if (pagefind) {
+        pagefindRef.current = pagefind;
+        useApiFallbackRef.current = false;
+      } else {
+        pagefindRef.current = null;
+        useApiFallbackRef.current = true;
+      }
+
+      setSearchReady(true);
+    }
+
+    prepareSearch();
+    return () => {
+      cancelled = true;
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || !searchReady || !query.trim()) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
+
+    const trimmed = query.trim();
     const timer = setTimeout(async () => {
-      if (!pagefindRef.current) return;
       setLoading(true);
       try {
-        const search = await pagefindRef.current.search(query);
-        const data = await Promise.all(search.results.slice(0, 8).map((r) => r.data()));
+        if (useApiFallbackRef.current || !pagefindRef.current) {
+          setResults(await searchViaApi(trimmed));
+          return;
+        }
+
+        const search = await pagefindRef.current.search(trimmed);
+        const data = await Promise.all(
+          search.results.slice(0, 8).map((result) => result.data()),
+        );
         setResults(data);
+      } catch {
+        setResults(await searchViaApi(trimmed));
       } finally {
         setLoading(false);
       }
     }, 200);
 
     return () => clearTimeout(timer);
-  }, [query, open]);
+  }, [query, open, searchReady]);
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -129,7 +151,7 @@ export function SiteSearch({
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search properties, localities…"
-                  className="flex-1 bg-transparent py-1 text-base outline-none placeholder:text-ink-faint"
+                  className="flex-1 bg-transparent py-1 text-base text-ink outline-none placeholder:text-ink-faint"
                 />
                 <button
                   type="button"
@@ -145,7 +167,10 @@ export function SiteSearch({
                 {loading && (
                   <p className="px-3 py-4 text-sm text-ink-faint">Searching…</p>
                 )}
-                {!loading && query && results.length === 0 && (
+                {!loading && query && !searchReady && (
+                  <p className="px-3 py-4 text-sm text-ink-faint">Searching…</p>
+                )}
+                {!loading && searchReady && query && results.length === 0 && (
                   <p className="px-3 py-4 text-sm text-ink-faint">No results found.</p>
                 )}
                 {results.map((result) => (
