@@ -1,22 +1,30 @@
+import { timingSafeEqual } from "node:crypto";
+
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { clearPropertyCache } from "@/lib/properties";
 
+function secretsMatch(provided: string | null, expected: string): boolean {
+  if (!provided) return false;
+
+  const providedBuffer = Buffer.from(provided);
+  const expectedBuffer = Buffer.from(expected);
+
+  if (providedBuffer.length !== expectedBuffer.length) return false;
+
+  return timingSafeEqual(providedBuffer, expectedBuffer);
+}
+
 export async function POST(request: Request) {
-  let bodySecret: string | undefined;
-  try {
-    const body = (await request.json()) as { secret?: string };
-    bodySecret = body.secret;
-  } catch {
-    bodySecret = undefined;
-  }
+  const secret = request.headers.get("x-revalidate-secret");
+  const expected = process.env.REVALIDATE_SECRET;
 
-  const secret =
-    request.headers.get("x-revalidate-secret") ?? bodySecret;
-
-  if (!process.env.REVALIDATE_SECRET || secret !== process.env.REVALIDATE_SECRET) {
-    return NextResponse.json({ revalidated: false, message: "Invalid secret" }, { status: 401 });
+  if (!expected || !secretsMatch(secret, expected)) {
+    return NextResponse.json(
+      { revalidated: false, message: "Invalid secret" },
+      { status: 401 },
+    );
   }
 
   clearPropertyCache();

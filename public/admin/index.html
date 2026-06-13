@@ -6,6 +6,7 @@
     <meta name="robots" content="noindex" />
     <title>HubliHomes Admin</title>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="/identity-guard.js"></script>
     <style>
       /*
         Decap CMS git-gateway fallback login form uses margin-top: -80px on AuthForm,
@@ -22,17 +23,6 @@
   </head>
   <body>
     <!-- Decap CMS: git-based content editor. No database required. -->
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-    <script>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", (user) => {
-          if (!user) {
-            window.netlifyIdentity.on("login", () => {
-              document.location.href = "/admin/index.html";
-            });
-          }
-        });
-      }
-    </script>
+    <script src="https://unpkg.com/decap-cms@3.6.3/dist/decap-cms.js"></script>
   </body>
 </html>
