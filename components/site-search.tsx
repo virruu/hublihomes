@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { sanitizeSearchExcerpt } from "@/lib/sanitize-html";
+import { normalizePagefindResult } from "@/lib/pagefind-url";
 import type { SiteSearchResult } from "@/lib/site-search-data";
 
 import { CloseIcon, SearchIcon } from "./icons";
@@ -98,7 +99,11 @@ export function SiteSearch({
         const data = await Promise.all(
           search.results.slice(0, 8).map((result) => result.data()),
         );
-        setResults(data);
+        setResults(
+          data
+            .map(normalizePagefindResult)
+            .filter((result): result is SiteSearchResult => result !== null),
+        );
       } catch {
         setResults(await searchViaApi(trimmed));
       } finally {

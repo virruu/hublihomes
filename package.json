@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "pagefind --site .next --output-path public/pagefind || true",
+    "postbuild": "pagefind --site .next/server/app --output-path public/pagefind || true",
     "images": "node scripts/generate-property-images.mjs",
     "start": "next start",
     "lint": "next lint"
