@@ -15,3 +15,6 @@
 /api/*
   X-Robots-Tag: noindex, nofollow
   X-Frame-Options: DENY
+
+/pagefind/*
+  X-Robots-Tag: noindex, nofollow
