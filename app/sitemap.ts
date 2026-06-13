@@ -1,17 +1,27 @@
 import type { MetadataRoute } from "next";
 
 import { getLocationPages } from "@/lib/locations";
-import { getAllProperties } from "@/lib/properties";
+import { getBrowseSitemapPaths } from "@/lib/property-filters";
+import { getAllProperties, getLocalities } from "@/lib/properties";
 import { site } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const staticRoutes = ["", "/properties"].map((route) => ({
-    url: `${site.url}${route}`,
+  const staticRoutes = [
+    {
+      url: site.url,
+      lastModified: now,
+      changeFrequency: "daily" as const,
+      priority: 1,
+    },
+  ];
+
+  const browseRoutes = getBrowseSitemapPaths(getLocalities()).map((path) => ({
+    url: `${site.url}${path}`,
     lastModified: now,
-    changeFrequency: "daily" as const,
-    priority: route === "" ? 1 : 0.8,
+    changeFrequency: "weekly" as const,
+    priority: path === "/properties" ? 0.8 : 0.75,
   }));
 
   const propertyRoutes = getAllProperties().map((property) => ({
@@ -28,5 +38,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...propertyRoutes, ...locationRoutes];
+  return [...staticRoutes, ...browseRoutes, ...propertyRoutes, ...locationRoutes];
 }

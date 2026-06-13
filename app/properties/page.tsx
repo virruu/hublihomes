@@ -4,15 +4,15 @@ import { Suspense } from "react";
 import { PropertyExplorer } from "@/components/property-explorer";
 import { metaDescription } from "@/lib/seo";
 import {
+  getExplorerCanonicalPath,
+  getExplorerPageCopy,
   hasActiveExplorerFilters,
+  isIndexableExplorerFilters,
   parseExplorerFilters,
   searchParamsRecordToURLSearchParams,
 } from "@/lib/property-filters";
 import { getAllProperties, getLocalities } from "@/lib/properties";
 import { site } from "@/lib/site";
-
-const BROWSE_DESCRIPTION =
-  "Search and filter curated houses, flats, villas, plots and PGs for rent and sale across Hubli with rich filters for Vastu, vegetarian, bachelor and family preferences.";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -26,18 +26,23 @@ export function generateMetadata({
     searchParamsRecordToURLSearchParams(searchParams),
     localities,
   );
-  const description = metaDescription(BROWSE_DESCRIPTION);
+  const { title, description } = getExplorerPageCopy(filters);
+  const trimmedDescription = metaDescription(description);
+  const canonical = getExplorerCanonicalPath(filters);
   const filtered = hasActiveExplorerFilters(filters);
+  const indexable = isIndexableExplorerFilters(filters);
 
   return {
-    title: "Browse Properties in Hubli",
-    description,
-    alternates: { canonical: "/properties" },
-    ...(filtered ? { robots: { index: false, follow: true } } : {}),
+    title,
+    description: trimmedDescription,
+    alternates: { canonical },
+    ...(filtered && !indexable
+      ? { robots: { index: false, follow: true } }
+      : {}),
     openGraph: {
-      title: "Browse Properties in Hubli",
-      description,
-      url: `${site.url}/properties`,
+      title,
+      description: trimmedDescription,
+      url: `${site.url}${canonical}`,
     },
   };
 }
@@ -57,14 +62,15 @@ export default function PropertiesPage({
     searchParamsRecordToURLSearchParams(searchParams),
     localities,
   );
+  const { heading, description } = getExplorerPageCopy(initial);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10" data-pagefind-body>
       <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-        Properties in Hubli
+        {heading}
       </h1>
-      <p className="mt-1 text-sm text-ink-muted sm:text-base">
-        Curated and verified listings — updated by the HubliHomes team.
+      <p className="mt-1 max-w-2xl text-sm text-ink-muted sm:text-base">
+        {description}
       </p>
       <div className="mt-6 sm:mt-8">
         <Suspense fallback={<ExplorerFallback />}>
