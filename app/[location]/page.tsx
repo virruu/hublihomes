@@ -9,7 +9,7 @@ import {
   getLocationPageProperties,
   getLocationPages,
 } from "@/lib/locations";
-import { breadcrumbSchema } from "@/lib/seo";
+import { breadcrumbSchema, metaDescription } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 export const dynamicParams = false;
@@ -25,14 +25,24 @@ export function generateMetadata({
 }): Metadata {
   const page = getLocationPage(params.location);
   if (!page) return {};
+
+  const properties = getLocationPageProperties(page);
+  const heroProperty = properties.find((property) => property.featured) ?? properties[0];
+  const description = metaDescription(page.description);
+
   return {
     title: page.title,
-    description: page.description,
+    description,
     alternates: { canonical: `/${page.slug}` },
     openGraph: {
       title: page.title,
-      description: page.description,
+      description,
       url: `${site.url}/${page.slug}`,
+      ...(heroProperty
+        ? {
+            images: [{ url: heroProperty.coverImage, alt: heroProperty.title }],
+          }
+        : {}),
     },
   };
 }

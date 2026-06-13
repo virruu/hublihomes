@@ -1,10 +1,23 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { HomeHero } from "@/components/home-hero";
 import { PropertyCard } from "@/components/property-card";
 import { RecentlyViewed } from "@/components/recently-viewed";
 import { ArrowIcon } from "@/components/icons";
+import { metaDescription } from "@/lib/seo";
 import { getAllProperties, getFeaturedProperties } from "@/lib/properties";
+import { site } from "@/lib/site";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  description: metaDescription(site.description),
+  openGraph: {
+    url: site.url,
+    title: `${site.name} — ${site.tagline}`,
+    description: metaDescription(site.description),
+  },
+};
 
 const categories = [
   { label: "Family Homes", href: "/properties?listing=Rent&family=Preferred" },

@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 
 import { FavoritesList } from "@/components/favorites-list";
+import { metaDescription } from "@/lib/seo";
 import { getAllProperties } from "@/lib/properties";
 
 export const metadata: Metadata = {
   title: "Your Saved Favorites",
-  description: "Your shortlisted HubliHomes properties, saved on this device.",
+  description: metaDescription(
+    "Your shortlisted HubliHomes properties, saved on this device.",
+  ),
   robots: { index: false, follow: false },
 };
 
