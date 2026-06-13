@@ -1,2 +1,69 @@
-# hublihomes
-Premium real estate platform for Hubli featuring rental houses, flats, villas, plots and properties for sale. Built with Next.js, Tailwind CSS and Netlify.
+# HubliHomes
+
+Premium real estate platform for Hubli featuring rental houses, flats, villas, plots and properties for sale. Built with **Next.js**, **Tailwind CSS** and deployed on **Netlify**.
+
+HubliHomes is a city-focused, manually curated real estate portal. Listings are stored as plain JSON files (no database) and managed through a Git-based admin dashboard (Decap CMS), so the whole site is fast, free to host on Netlify's CDN, and fully version controlled.
+
+## Tech stack
+
+- **Next.js 14** (App Router, TypeScript) — static generation for blazing speed
+- **Tailwind CSS** — premium, responsive UI with light/dark mode
+- **File-based content** — each property is a JSON file in `content/properties/` (no database)
+- **Decap CMS** — git-based admin dashboard at `/admin/` (no server, no database)
+- **SEO** — JSON-LD structured data (`Residence`, `BreadcrumbList`, `FAQPage`, `RealEstateAgent`), dynamic metadata, `sitemap.xml`, `robots.txt`, dynamic Open Graph image
+- **Netlify** — free static hosting on the edge CDN
+
+## Getting started
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:3000.
+
+### Scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the dev server (http://localhost:3000) |
+| `npm run build` | Production build (static generation) |
+| `npm run start` | Serve the production build |
+| `npm run lint` | Run ESLint |
+
+## Project structure
+
+```
+app/                     Next.js App Router pages
+  page.tsx               Home (hero, search, featured)
+  properties/            Listings + rich filters
+  properties/[slug]/     Property detail page
+  [location]/            SEO landing pages (/rent-house-vidyanagar, ...)
+  favorites/             Saved favorites (localStorage)
+  sitemap.ts, robots.ts  SEO infra
+components/              UI components
+content/properties/      Property listings (one JSON file each — the "database")
+lib/                     Content loader, formatting, SEO schema helpers
+public/admin/            Decap CMS admin dashboard
+```
+
+## Managing listings (no database)
+
+Each property is a JSON file in `content/properties/`. Add, edit or delete a file and the site regenerates.
+
+### Admin dashboard
+
+The Decap CMS dashboard lives at `/admin/`.
+
+- **Production:** uses Netlify Identity + Git Gateway. Editors log in, make changes, and Decap commits the JSON files to GitHub → Netlify rebuilds the site.
+- **Local development:** the dashboard is served at http://localhost:3000/admin/index.html. To edit content locally, run the Decap local backend in a second terminal:
+
+  ```bash
+  npx decap-server
+  ```
+
+  Then open http://localhost:3000/admin/index.html and click **Login** (the local backend needs no credentials and writes changes directly to your working copy).
+
+## Deployment (Netlify)
+
+`netlify.toml` is preconfigured. Connect the repo to Netlify; the build command is `npm run build` with the official `@netlify/plugin-nextjs`. Enable Netlify Identity + Git Gateway to use the admin dashboard in production.

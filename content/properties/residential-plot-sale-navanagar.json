@@ -1,0 +1,48 @@
+{
+  "slug": "residential-plot-sale-navanagar",
+  "title": "Residential Plot for Sale in Navanagar",
+  "listing": "Sale",
+  "propertyType": "Plot",
+  "bhk": null,
+  "price": 5200000,
+  "priceSuffix": "",
+  "area": 2400,
+  "locality": "Navanagar",
+  "city": "Hubli",
+  "facing": "North",
+  "vastu": true,
+  "vegetarian": "Not Required",
+  "bachelors": "Not Allowed",
+  "family": "Allowed",
+  "parking": "Open",
+  "bathrooms": 0,
+  "furnished": "Unfurnished",
+  "featured": false,
+  "isNew": false,
+  "gradient": "from-lime-400 via-green-500 to-emerald-600",
+  "gallery": [
+    "from-lime-400 via-green-500 to-emerald-600",
+    "from-green-300 to-lime-600",
+    "from-emerald-400 to-green-700"
+  ],
+  "description": "A clear-title, north-facing corner plot in a fast-developing layout of Navanagar. Wide internal roads, underground drainage and park-facing position make it perfect to build your dream home or hold as an investment.",
+  "amenities": ["Corner Plot", "Clear Title", "Wide Roads", "Park Facing", "Underground Drainage"],
+  "rules": ["Vastu Compliant", "Ready to Register"],
+  "nearby": {
+    "schools": ["Navanagar Public School"],
+    "hospitals": ["KIMS Hospital"],
+    "busStop": "Navanagar Bus Stop (600 m)",
+    "railway": "Hubballi Junction (5.0 km)"
+  },
+  "owner": {
+    "name": "Mahesh Desai",
+    "phone": "+919900000004",
+    "whatsapp": "919900000004"
+  },
+  "faq": [
+    { "question": "Is the plot Vastu compliant?", "answer": "Yes, it is a north-facing corner plot, considered highly Vastu favourable." },
+    { "question": "Is it ready for registration?", "answer": "Yes, the plot has a clear title and is ready to register immediately." },
+    { "question": "Are loans available?", "answer": "Yes, the layout is approved and eligible for plot purchase loans from major banks." }
+  ],
+  "mapQuery": "Navanagar, Hubli, Karnataka"
+}

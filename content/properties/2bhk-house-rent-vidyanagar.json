@@ -1,0 +1,48 @@
+{
+  "slug": "2bhk-house-rent-vidyanagar",
+  "title": "2 BHK House for Rent in Vidyanagar",
+  "listing": "Rent",
+  "propertyType": "House",
+  "bhk": 2,
+  "price": 18000,
+  "priceSuffix": "/month",
+  "area": 1200,
+  "locality": "Vidyanagar",
+  "city": "Hubli",
+  "facing": "East",
+  "vastu": true,
+  "vegetarian": "Preferred",
+  "bachelors": "Allowed",
+  "family": "Preferred",
+  "parking": "Car + Bike",
+  "bathrooms": 2,
+  "furnished": "Semi Furnished",
+  "featured": true,
+  "isNew": true,
+  "gradient": "from-amber-400 via-orange-500 to-rose-500",
+  "gallery": [
+    "from-amber-400 via-orange-500 to-rose-500",
+    "from-orange-300 to-amber-600",
+    "from-rose-400 to-orange-500"
+  ],
+  "description": "A bright, east-facing 2 BHK independent house in the heart of Vidyanagar. Semi-furnished with a modular kitchen, large balcony and dedicated parking for a car and bike. Walking distance to schools, supermarkets and the Vidyanagar bus stop.",
+  "amenities": ["Borewell", "Cauvery Water", "Balcony", "Power Backup", "Modular Kitchen", "24x7 Water"],
+  "rules": ["Bachelors Allowed", "Family Preferred", "Vegetarian Preferred", "No Pets"],
+  "nearby": {
+    "schools": ["Vidyanagar Public School", "St. Joseph's Convent"],
+    "hospitals": ["KIMS Hospital", "Suchirayu Hospital"],
+    "busStop": "Vidyanagar Bus Stop (350 m)",
+    "railway": "Hubballi Junction (4.2 km)"
+  },
+  "owner": {
+    "name": "Suresh Patil",
+    "phone": "+919900000001",
+    "whatsapp": "919900000001"
+  },
+  "faq": [
+    { "question": "Is this property suitable for bachelors?", "answer": "Yes, bachelors are allowed. Families are preferred." },
+    { "question": "Is parking available?", "answer": "Yes, dedicated parking for one car and one bike is included." },
+    { "question": "Is the house Vastu compliant?", "answer": "Yes, the house is east-facing and Vastu compliant." }
+  ],
+  "mapQuery": "Vidyanagar, Hubli, Karnataka"
+}

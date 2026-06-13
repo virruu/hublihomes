@@ -1,0 +1,81 @@
+# Decap CMS configuration — commits property files straight to GitHub.
+# Production uses Netlify Identity + Git Gateway (no server, no database).
+# Local development: set `local_backend: true` and run `npx decap-server`.
+
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: true
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "properties"
+    label: "Properties"
+    label_singular: "Property"
+    folder: "content/properties"
+    create: true
+    slug: "{{slug}}"
+    extension: "json"
+    format: "json"
+    summary: "{{title}} — {{locality}}"
+    fields:
+      - { name: "slug", label: "Slug", widget: "string" }
+      - { name: "title", label: "Title", widget: "string" }
+      - { name: "listing", label: "Listing", widget: "select", options: ["Rent", "Sale"] }
+      - {
+          name: "propertyType",
+          label: "Property Type",
+          widget: "select",
+          options: ["House", "Flat", "Villa", "Plot", "Commercial", "PG"],
+        }
+      - { name: "bhk", label: "BHK", widget: "number", required: false, value_type: "int" }
+      - { name: "price", label: "Price (INR)", widget: "number", value_type: "int" }
+      - { name: "priceSuffix", label: "Price Suffix", widget: "string", required: false, default: "" }
+      - { name: "area", label: "Area (sqft)", widget: "number", value_type: "int" }
+      - { name: "locality", label: "Locality", widget: "string" }
+      - { name: "city", label: "City", widget: "string", default: "Hubli" }
+      - { name: "facing", label: "Facing", widget: "select", options: ["East", "West", "North", "South"] }
+      - { name: "vastu", label: "Vastu Compliant", widget: "boolean", default: false }
+      - { name: "vegetarian", label: "Vegetarian", widget: "select", options: ["Yes", "Preferred", "Not Required"] }
+      - { name: "bachelors", label: "Bachelors", widget: "select", options: ["Allowed", "Not Allowed"] }
+      - { name: "family", label: "Family", widget: "select", options: ["Preferred", "Allowed"] }
+      - { name: "parking", label: "Parking", widget: "string" }
+      - { name: "bathrooms", label: "Bathrooms", widget: "number", value_type: "int", default: 0 }
+      - {
+          name: "furnished",
+          label: "Furnishing",
+          widget: "select",
+          options: ["Fully Furnished", "Semi Furnished", "Unfurnished"],
+        }
+      - { name: "featured", label: "Featured", widget: "boolean", default: false }
+      - { name: "isNew", label: "New Listing", widget: "boolean", default: true }
+      - { name: "gradient", label: "Cover Gradient (Tailwind)", widget: "string" }
+      - { name: "gallery", label: "Gallery Gradients", widget: "list", field: { name: "g", label: "Gradient", widget: "string" } }
+      - { name: "description", label: "Description", widget: "text" }
+      - { name: "amenities", label: "Amenities", widget: "list", field: { name: "a", label: "Amenity", widget: "string" } }
+      - { name: "rules", label: "Rules", widget: "list", field: { name: "r", label: "Rule", widget: "string" } }
+      - name: "nearby"
+        label: "Nearby"
+        widget: "object"
+        fields:
+          - { name: "schools", label: "Schools", widget: "list", field: { name: "s", label: "School", widget: "string" } }
+          - { name: "hospitals", label: "Hospitals", widget: "list", field: { name: "h", label: "Hospital", widget: "string" } }
+          - { name: "busStop", label: "Bus Stop", widget: "string" }
+          - { name: "railway", label: "Railway", widget: "string" }
+      - name: "owner"
+        label: "Owner"
+        widget: "object"
+        fields:
+          - { name: "name", label: "Name", widget: "string" }
+          - { name: "phone", label: "Phone", widget: "string" }
+          - { name: "whatsapp", label: "WhatsApp", widget: "string" }
+      - name: "faq"
+        label: "FAQ"
+        widget: "list"
+        fields:
+          - { name: "question", label: "Question", widget: "string" }
+          - { name: "answer", label: "Answer", widget: "text" }
+      - { name: "mapQuery", label: "Map Query", widget: "string" }
