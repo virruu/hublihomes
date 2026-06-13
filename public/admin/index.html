@@ -5,9 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <title>HubliHomes Admin</title>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <style>
+      /*
+        Decap CMS git-gateway fallback login form uses margin-top: -80px on AuthForm,
+        which makes validation errors overlap the logo when Login is clicked empty.
+      */
+      form:has(input[name="email"]) {
+        margin-top: 0 !important;
+      }
+
+      form:has(input[name="email"]) p {
+        margin: 0 0 4px;
+      }
+    </style>
   </head>
   <body>
     <!-- Decap CMS: git-based content editor. No database required. -->
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", (user) => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/index.html";
+            });
+          }
+        });
+      }
+    </script>
   </body>
 </html>
