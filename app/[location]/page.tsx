@@ -9,7 +9,7 @@ import {
   getLocationPageProperties,
   getLocationPages,
 } from "@/lib/locations";
-import { breadcrumbSchema } from "@/lib/seo";
+import { breadcrumbSchema, metaDescription } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 export const dynamicParams = false;
@@ -25,11 +25,25 @@ export function generateMetadata({
 }): Metadata {
   const page = getLocationPage(params.location);
   if (!page) return {};
+
+  const properties = getLocationPageProperties(page);
+  const heroProperty = properties.find((property) => property.featured) ?? properties[0];
+  const description = metaDescription(page.description);
+
   return {
     title: page.title,
-    description: page.description,
+    description,
     alternates: { canonical: `/${page.slug}` },
-    openGraph: { title: page.title, description: page.description },
+    openGraph: {
+      title: page.title,
+      description,
+      url: `${site.url}/${page.slug}`,
+      ...(heroProperty
+        ? {
+            images: [{ url: heroProperty.coverImage, alt: heroProperty.title }],
+          }
+        : {}),
+    },
   };
 }
 
@@ -44,7 +58,7 @@ export default function LocationPage({
   const properties = getLocationPageProperties(page);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10">
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10" data-pagefind-body>
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", url: site.url },

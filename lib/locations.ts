@@ -48,7 +48,7 @@ function pageFor(
     listing,
     propertyType,
     locality,
-    title: `${propertyType} ${verb} in ${locality}, Hubli | HubliHomes`,
+    title: `${propertyType} ${verb} in ${locality}, Hubli`,
     heading: `${typeLabel} ${verb} in ${locality}`,
     description: `Browse curated ${propertyType.toLowerCase()} listings ${verb.toLowerCase()} in ${locality}, Hubli. Verified details on Vastu, parking, water supply, bachelor & family preferences — only on HubliHomes.`,
   };

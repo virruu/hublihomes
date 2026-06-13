@@ -14,7 +14,7 @@ import { RecordView } from "@/components/record-view";
 import { ShareButton } from "@/components/share-button";
 import { bhkLabel, formatPrice } from "@/lib/format";
 import { getProperty, getPropertySlugs, getSimilarProperties } from "@/lib/properties";
-import { breadcrumbSchema, faqSchema, residenceSchema } from "@/lib/seo";
+import { breadcrumbSchema, faqSchema, metaDescription, residenceSchema } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 export const dynamicParams = false;
@@ -37,8 +37,10 @@ export function generateMetadata({
   if (property.vastu) tags.push("Vastu");
   const tagLabel = tags.length ? ` | ${tags.join(" & ")}` : "";
 
-  const title = `${property.title}, ${property.locality} Hubli${tagLabel}`;
-  const description = `${formatPrice(property)} · ${bhkLabel(property)} · ${property.area} sqft · ${property.facing} facing in ${property.locality}, Hubli. ${property.description}`;
+  const title = `${property.title}, Hubli${tagLabel}`;
+  const description = metaDescription(
+    `${formatPrice(property)} · ${bhkLabel(property)} · ${property.area} sqft · ${property.facing} facing in ${property.locality}, Hubli. ${property.description}`,
+  );
 
   return {
     title,
@@ -137,7 +139,7 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
         <span className="text-ink">{property.locality}</span>
       </nav>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_340px] lg:gap-8">
+      <div className="grid gap-6 lg:grid-cols-[1fr_340px] lg:gap-8" data-pagefind-body>
         <div>
           <Gallery property={property} />
 

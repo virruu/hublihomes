@@ -2,6 +2,17 @@ import { formatPrice } from "./format";
 import { site } from "./site";
 import type { Property } from "./types";
 
+/** Trim text for HTML meta description tags (~155 chars for SERP snippets). */
+export function metaDescription(text: string, maxLength = 155): string {
+  const normalized = text.replace(/\s+/g, " ").trim();
+  if (normalized.length <= maxLength) return normalized;
+
+  const truncated = normalized.slice(0, maxLength - 1);
+  const lastSpace = truncated.lastIndexOf(" ");
+  const cut = lastSpace > 80 ? truncated.slice(0, lastSpace) : truncated;
+  return `${cut.trimEnd()}…`;
+}
+
 export function residenceSchema(property: Property) {
   return {
     "@context": "https://schema.org",

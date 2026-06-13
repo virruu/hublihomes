@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/jsonld";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { localBusinessSchema } from "@/lib/seo";
+import { localBusinessSchema, metaDescription } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 import "./globals.css";
@@ -24,27 +24,19 @@ export const metadata: Metadata = {
     default: `${site.name} — ${site.tagline}`,
     template: `%s | ${site.name}`,
   },
-  description: site.description,
-  keywords: [
-    "Hubli real estate",
-    "houses for rent Hubli",
-    "flats for sale Hubli",
-    "villas Hubli",
-    "plots Hubli",
-    "PG Hubli",
-  ],
+  description: metaDescription(site.description),
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: site.url,
     siteName: site.name,
     title: `${site.name} — ${site.tagline}`,
-    description: site.description,
+    description: metaDescription(site.description),
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.name} — ${site.tagline}`,
-    description: site.description,
+    description: metaDescription(site.description),
   },
   robots: { index: true, follow: true },
 };
