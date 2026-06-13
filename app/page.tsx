@@ -1,11 +1,10 @@
 import Link from "next/link";
 
+import { HomeHero } from "@/components/home-hero";
 import { PropertyCard } from "@/components/property-card";
 import { RecentlyViewed } from "@/components/recently-viewed";
-import { SearchBar } from "@/components/search-bar";
 import { ArrowIcon } from "@/components/icons";
 import { getAllProperties, getFeaturedProperties } from "@/lib/properties";
-import { site } from "@/lib/site";
 
 const categories = [
   { label: "Family Homes", href: "/properties?listing=Rent&family=Preferred" },
@@ -24,37 +23,7 @@ export default function HomePage() {
 
   return (
     <div>
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-700 via-brand-600 to-brand-800" />
-        <div className="absolute inset-0 -z-10 opacity-25 [background-image:radial-gradient(circle_at_20%_20%,white,transparent_40%),radial-gradient(circle_at_80%_0%,white,transparent_35%)]" />
-        <div className="mx-auto max-w-7xl px-4 py-16 text-center text-white sm:px-6 sm:py-24">
-          <span className="inline-block rounded-full bg-white/15 px-4 py-1.5 text-sm font-medium backdrop-blur">
-            Curated · Verified · Hubli only
-          </span>
-          <h1 className="mx-auto mt-5 max-w-3xl text-3xl font-bold leading-tight tracking-tight sm:mt-6 sm:text-5xl lg:text-6xl">
-            {site.tagline}
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-base text-white/85 sm:text-lg">
-            Rent · Buy · Villas · Flats · Plots — with the details that matter:
-            Vastu, vegetarian-friendly, parking, water supply and more.
-          </p>
-          <div className="mt-8 sm:mt-10">
-            <SearchBar />
-          </div>
-          <div className="mt-6 flex flex-wrap justify-center gap-2 sm:mt-8">
-            <span className="text-sm text-white/70">Popular:</span>
-            {site.localities.slice(0, 5).map((locality) => (
-              <Link
-                key={locality}
-                href={`/properties?locality=${encodeURIComponent(locality)}`}
-                className="chip bg-white/15 text-white hover:bg-white/25"
-              >
-                {locality}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HomeHero />
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
         <h2 className="text-xl font-bold text-ink sm:text-2xl">Browse by category</h2>
