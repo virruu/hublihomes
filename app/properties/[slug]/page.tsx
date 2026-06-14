@@ -125,7 +125,7 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
   ];
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-5 pb-28 sm:px-6 sm:py-8 lg:pb-8">
+    <div className="mx-auto max-w-7xl overflow-x-clip px-4 py-5 pb-28 sm:px-6 sm:py-8 lg:pb-8">
       <RecordView slug={property.slug} />
       <JsonLd data={residenceSchema(property)} />
       <JsonLd data={breadcrumbSchema(breadcrumb)} />
@@ -139,8 +139,8 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
         <span className="text-ink">{property.locality}</span>
       </nav>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_340px] lg:gap-8" data-pagefind-body>
-        <div>
+      <div className="grid min-w-0 gap-6 lg:grid-cols-[1fr_340px] lg:gap-8" data-pagefind-body>
+        <div className="min-w-0">
           <Gallery property={property} />
 
           <div className="mt-4 flex flex-wrap items-start justify-between gap-3 sm:mt-6">
@@ -288,9 +288,9 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
 
 function KeyValue({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between border-b border-brand-50 py-2">
-      <span className="text-ink-muted">{label}</span>
-      <span className="font-medium text-ink">{value}</span>
+    <div className="flex min-w-0 items-start justify-between gap-3 border-b border-brand-50 py-2">
+      <span className="shrink-0 text-ink-muted">{label}</span>
+      <span className="min-w-0 text-right font-medium text-ink break-words">{value}</span>
     </div>
   );
 }
@@ -301,8 +301,9 @@ function NearbyCard({ title, items }: { title: string; items: string[] }) {
       <p className="text-sm font-bold text-ink">{title}</p>
       <ul className="mt-2 space-y-1 text-sm text-ink-muted">
         {items.map((item) => (
-          <li key={item} className="flex items-start gap-2">
-            <PinIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" /> {item}
+          <li key={item} className="flex min-w-0 items-start gap-2 break-words">
+            <PinIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" />
+            <span>{item}</span>
           </li>
         ))}
       </ul>
