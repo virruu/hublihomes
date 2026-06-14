@@ -51,7 +51,7 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-surface text-ink">
         <JsonLd data={localBusinessSchema()} />
         <SiteHeader />
-        <main className="min-h-screen pb-20 md:pb-0">{children}</main>
+        <main className="min-h-screen overflow-x-clip pb-20 md:pb-0">{children}</main>
         <SiteFooter />
         <FloatingContact />
         <MobileBottomNav />

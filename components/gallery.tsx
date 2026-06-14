@@ -12,7 +12,7 @@ export function Gallery({ property }: { property: Property }) {
   const gallery = property.gallery.length ? property.gallery : [property.coverImage];
 
   return (
-    <div>
+    <div className="min-w-0">
       <button
         type="button"
         onClick={() => setFullscreen(true)}
@@ -28,7 +28,7 @@ export function Gallery({ property }: { property: Property }) {
         />
       </button>
 
-      <div className="mt-3 flex gap-2 overflow-x-auto pb-1 sm:gap-3">
+      <div className="mt-3 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0 sm:gap-3">
         {gallery.map((image, index) => (
           <button
             key={image + index}

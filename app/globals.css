@@ -40,11 +40,19 @@
   }
 
   .prose-property {
-    @apply leading-relaxed text-ink-muted;
+    @apply leading-relaxed text-ink-muted break-words;
   }
 
   .prose-property p + p {
     @apply mt-3;
+  }
+
+  .prose-property ul {
+    @apply mt-3 list-disc space-y-1.5 pl-5;
+  }
+
+  .prose-property strong {
+    @apply font-semibold text-ink;
   }
 }
 
