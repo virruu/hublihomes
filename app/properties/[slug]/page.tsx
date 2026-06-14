@@ -129,7 +129,7 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
       <RecordView slug={property.slug} />
       <JsonLd data={residenceSchema(property)} />
       <JsonLd data={breadcrumbSchema(breadcrumb)} />
-      <JsonLd data={faqSchema(property.faq)} />
+      {property.faq.length > 0 && <JsonLd data={faqSchema(property.faq)} />}
 
       <nav className="mb-3 flex flex-wrap items-center gap-1.5 text-sm text-ink-faint">
         <Link href="/" className="hover:text-brand-600">Home</Link>
@@ -228,19 +228,21 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
             />
           </section>
 
-          <section className="mt-6 sm:mt-8">
-            <h2 className="text-lg font-bold text-ink sm:text-xl">Frequently asked questions</h2>
-            <div className="mt-3 divide-y divide-brand-100 rounded-2xl border border-brand-100">
-              {property.faq.map((entry) => (
-                <details key={entry.question} className="group p-4">
-                  <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden">
-                    {entry.question}
-                  </summary>
-                  <p className="mt-2 text-sm text-ink-muted">{entry.answer}</p>
-                </details>
-              ))}
-            </div>
-          </section>
+          {property.faq.length > 0 && (
+            <section className="mt-6 sm:mt-8">
+              <h2 className="text-lg font-bold text-ink sm:text-xl">Frequently asked questions</h2>
+              <div className="mt-3 divide-y divide-brand-100 rounded-2xl border border-brand-100">
+                {property.faq.map((entry) => (
+                  <details key={entry.question} className="group p-4">
+                    <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden">
+                      {entry.question}
+                    </summary>
+                    <p className="mt-2 text-sm text-ink-muted">{entry.answer}</p>
+                  </details>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
 
         <aside className="hidden lg:sticky lg:top-20 lg:block lg:h-fit">

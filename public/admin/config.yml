@@ -68,6 +68,8 @@ collections:
       - name: "faq"
         label: "FAQ"
         widget: "list"
+        required: false
+        default: []
         fields:
           - { name: "question", label: "Question", widget: "string" }
           - { name: "answer", label: "Answer", widget: "text" }

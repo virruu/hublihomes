@@ -11,16 +11,69 @@ const CONTENT_DIR = path.join(process.cwd(), "content", "properties");
 
 let cache: Property[] | null = null;
 
+const EMPTY_NEARBY: Property["nearby"] = {
+  schools: [],
+  hospitals: [],
+  busStop: "",
+  railway: "",
+};
+
+function normalizeProperty(
+  data: Partial<Omit<Property, "description" | "body">>,
+  description: string,
+): Property {
+  const listing = data.listing ?? "Rent";
+  const priceSuffix =
+    data.priceSuffix?.trim() ||
+    (listing === "Rent" ? "/month" : "");
+
+  return {
+    slug: data.slug ?? "",
+    title: data.title ?? "Untitled property",
+    listing,
+    propertyType: data.propertyType ?? "Flat",
+    bhk: data.bhk ?? null,
+    price: data.price ?? 0,
+    priceSuffix,
+    area: data.area ?? 0,
+    locality: data.locality ?? "Hubli",
+    city: data.city ?? "Hubli",
+    facing: data.facing ?? "East",
+    vastu: data.vastu ?? false,
+    vegetarian: data.vegetarian ?? "Not Required",
+    bachelors: data.bachelors ?? "Allowed",
+    family: data.family ?? "Allowed",
+    parking: data.parking ?? "",
+    bathrooms: data.bathrooms ?? 0,
+    furnished: data.furnished ?? "Unfurnished",
+    featured: data.featured ?? false,
+    isNew: data.isNew ?? true,
+    coverImage: data.coverImage ?? "",
+    gallery: data.gallery ?? [],
+    amenities: data.amenities ?? [],
+    rules: data.rules ?? [],
+    nearby: {
+      schools: data.nearby?.schools ?? EMPTY_NEARBY.schools,
+      hospitals: data.nearby?.hospitals ?? EMPTY_NEARBY.hospitals,
+      busStop: data.nearby?.busStop ?? EMPTY_NEARBY.busStop,
+      railway: data.nearby?.railway ?? EMPTY_NEARBY.railway,
+    },
+    faq: data.faq ?? [],
+    mapQuery: data.mapQuery ?? data.locality ?? "Hubli, Karnataka",
+    description,
+    body: description,
+  };
+}
+
 function parseProperty(file: string): Property {
   const raw = fs.readFileSync(path.join(CONTENT_DIR, file), "utf8");
   const { data, content } = matter(raw);
   const description = content.trim();
 
-  return {
-    ...(data as Omit<Property, "description" | "body">),
+  return normalizeProperty(
+    data as Partial<Omit<Property, "description" | "body">>,
     description,
-    body: description,
-  };
+  );
 }
 
 export function getAllProperties(): Property[] {
