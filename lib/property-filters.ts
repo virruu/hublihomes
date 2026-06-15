@@ -1,5 +1,6 @@
 export interface ExplorerFilters {
   listing: string;
+  status: string;
   type: string;
   locality: string;
   bhk: string;
@@ -15,6 +16,7 @@ export interface ExplorerFilters {
 
 export const EXPLORER_FILTER_DEFAULTS: ExplorerFilters = {
   listing: "Any",
+  status: "Any",
   type: "Any",
   locality: "Any",
   bhk: "Any",
@@ -29,6 +31,7 @@ export const EXPLORER_FILTER_DEFAULTS: ExplorerFilters = {
 };
 
 const LISTING_OPTIONS = ["Any", "Rent", "Sale"] as const;
+const STATUS_OPTIONS = ["Any", "Available", "Rented", "Sold"] as const;
 const TYPE_OPTIONS = [
   "Any",
   "House",
@@ -49,6 +52,7 @@ const FACING_OPTIONS = ["Any", "East", "West", "North", "South"] as const;
 
 const FILTER_KEYS = [
   "listing",
+  "status",
   "type",
   "locality",
   "bhk",
@@ -92,6 +96,7 @@ export function parseExplorerFilters(
 
   return {
     listing: pickOption(params.get("listing"), LISTING_OPTIONS, "Any"),
+    status: pickOption(params.get("status"), STATUS_OPTIONS, "Any"),
     type: pickOption(params.get("type"), TYPE_OPTIONS, "Any"),
     locality: pickOption(params.get("locality"), localityOptions, "Any"),
     bhk: pickOption(params.get("bhk"), BHK_OPTIONS, "Any"),
@@ -109,6 +114,7 @@ export function parseExplorerFilters(
 export function explorerFiltersToQuery(filters: ExplorerFilters): string {
   const params = new URLSearchParams();
   if (filters.listing !== "Any") params.set("listing", filters.listing);
+  if (filters.status !== "Any") params.set("status", filters.status);
   if (filters.type !== "Any") params.set("type", filters.type);
   if (filters.locality !== "Any") params.set("locality", filters.locality);
   if (filters.bhk !== "Any") params.set("bhk", filters.bhk);
@@ -138,6 +144,7 @@ export function searchParamsRecordToURLSearchParams(
 export function countActiveExplorerFilters(filters: ExplorerFilters): number {
   let count = 0;
   if (filters.listing !== "Any") count++;
+  if (filters.status !== "Any") count++;
   if (filters.type !== "Any") count++;
   if (filters.locality !== "Any") count++;
   if (filters.bhk !== "Any") count++;
@@ -274,6 +281,8 @@ export function getExplorerPageCopy(filters: ExplorerFilters): {
 
   const typeLabel = pluralTypeLabel(metadataFilters.type);
   const listing = listingPhrase(metadataFilters.listing);
+  const status =
+    metadataFilters.status !== "Any" ? metadataFilters.status : null;
   const locality =
     metadataFilters.locality !== "Any" ? metadataFilters.locality : null;
   const bhk = bhkPhrase(metadataFilters.bhk);
@@ -288,12 +297,28 @@ export function getExplorerPageCopy(filters: ExplorerFilters): {
   }
 
   let heading: string;
+  const statusSuffix =
+    status === "Rented"
+      ? " (Rented out)"
+      : status === "Sold"
+        ? " (Sold)"
+        : status === "Available"
+          ? " (Available)"
+          : "";
+
   if (locality && listing) {
-    heading = `${subject} ${listing} in ${locality}`;
+    heading = `${subject} ${listing} in ${locality}${statusSuffix}`;
   } else if (locality) {
-    heading = `${subject} in ${locality}`;
+    heading = `${subject} in ${locality}${statusSuffix}`;
   } else if (listing) {
-    heading = `${subject} ${listing} in Hubli`;
+    heading = `${subject} ${listing} in Hubli${statusSuffix}`;
+  } else if (status) {
+    heading =
+      status === "Rented"
+        ? `${subject} rented out in Hubli`
+        : status === "Sold"
+          ? `${subject} sold in Hubli`
+          : `Available ${subject.toLowerCase()} in Hubli`;
   } else {
     heading = `${subject} in Hubli`;
   }
@@ -326,6 +351,11 @@ export function getBrowseSitemapPaths(localities: string[]): string[] {
   for (const listing of LISTING_OPTIONS) {
     if (listing === "Any") continue;
     paths.add(getExplorerCanonicalPath({ ...EXPLORER_FILTER_DEFAULTS, listing }));
+  }
+
+  for (const status of STATUS_OPTIONS) {
+    if (status === "Any") continue;
+    paths.add(getExplorerCanonicalPath({ ...EXPLORER_FILTER_DEFAULTS, status }));
   }
 
   for (const type of TYPE_OPTIONS) {

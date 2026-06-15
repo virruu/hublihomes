@@ -25,6 +25,9 @@ export function searchSite(query: string, limit = 8): SiteSearchResult[] {
         property.propertyType,
         property.description,
         property.listing === "Rent" ? "rent" : "sale",
+        property.status,
+        property.status === "Rented" ? "rented out" : undefined,
+        property.status === "Sold" ? "sold" : undefined,
       ),
     )
     .map((property) => ({

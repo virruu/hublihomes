@@ -5,7 +5,7 @@ import path from "node:path";
 
 import matter from "gray-matter";
 
-import type { Property } from "./types";
+import type { Property, PropertyStatus } from "./types";
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "properties");
 
@@ -23,6 +23,8 @@ function normalizeProperty(
   description: string,
 ): Property {
   const listing = data.listing ?? "Rent";
+  const status: PropertyStatus =
+    data.status === "Rented" || data.status === "Sold" ? data.status : "Available";
   const priceSuffix =
     data.priceSuffix?.trim() ||
     (listing === "Rent" ? "/month" : "");
@@ -31,6 +33,7 @@ function normalizeProperty(
     slug: data.slug ?? "",
     title: data.title ?? "Untitled property",
     listing,
+    status,
     propertyType: data.propertyType ?? "Flat",
     bhk: data.bhk ?? null,
     price: data.price ?? 0,

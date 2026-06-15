@@ -12,6 +12,7 @@ import {
   shouldNormalizeExplorerQuery,
   type ExplorerFilters,
 } from "@/lib/property-filters";
+import { statusSortRank } from "@/lib/property-status";
 import type { Property } from "@/lib/types";
 
 import { CloseIcon, FilterIcon, SearchIcon } from "./icons";
@@ -87,6 +88,7 @@ function FilterPanel({
   return (
     <div className="space-y-4">
       <Select label="Listing" value={filters.listing} options={["Any", "Rent", "Sale"]} onChange={(v) => onUpdate("listing", v)} />
+      <Select label="Availability" value={filters.status} options={["Any", "Available", "Rented", "Sold"]} onChange={(v) => onUpdate("status", v)} />
       <Select label="Property type" value={filters.type} options={["Any", "House", "Flat", "Villa", "Plot", "PG", "Commercial"]} onChange={(v) => onUpdate("type", v)} />
       <Select label="Locality" value={filters.locality} options={["Any", ...localities]} onChange={(v) => onUpdate("locality", v)} />
 
@@ -202,6 +204,8 @@ export function PropertyExplorer({
     const filtered = properties.filter((property) => {
       if (filters.listing !== "Any" && property.listing !== filters.listing)
         return false;
+      if (filters.status !== "Any" && property.status !== filters.status)
+        return false;
       if (filters.type !== "Any" && property.propertyType !== filters.type)
         return false;
       if (filters.locality !== "Any" && property.locality !== filters.locality)
@@ -228,6 +232,14 @@ export function PropertyExplorer({
     });
 
     const sorted = [...filtered];
+    if (sort === "relevance") {
+      sorted.sort((a, b) => {
+        const statusDiff = statusSortRank(a.status) - statusSortRank(b.status);
+        if (statusDiff !== 0) return statusDiff;
+        if (a.featured !== b.featured) return a.featured ? -1 : 1;
+        return a.title.localeCompare(b.title);
+      });
+    }
     if (sort === "price-asc") sorted.sort((a, b) => a.price - b.price);
     if (sort === "price-desc") sorted.sort((a, b) => b.price - a.price);
     if (sort === "area-desc") sorted.sort((a, b) => b.area - a.area);

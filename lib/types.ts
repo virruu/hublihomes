@@ -1,5 +1,7 @@
 export type Listing = "Rent" | "Sale";
 
+export type PropertyStatus = "Available" | "Rented" | "Sold";
+
 export type PropertyType =
   | "House"
   | "Flat"
@@ -28,6 +30,7 @@ export interface Property {
   slug: string;
   title: string;
   listing: Listing;
+  status: PropertyStatus;
   propertyType: PropertyType;
   bhk: number | null;
   price: number;

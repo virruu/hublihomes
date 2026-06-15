@@ -10,11 +10,12 @@ import { getAllProperties, getFeaturedProperties } from "@/lib/properties";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
+  title: site.homeSeoTitle,
   alternates: { canonical: "/" },
   description: metaDescription(site.description),
   openGraph: {
     url: site.url,
-    title: `${site.name} — ${site.tagline}`,
+    title: site.homeSeoTitle,
     description: metaDescription(site.description),
   },
 };

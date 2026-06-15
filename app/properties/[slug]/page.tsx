@@ -14,6 +14,7 @@ import { RecordView } from "@/components/record-view";
 import { ShareButton } from "@/components/share-button";
 import { bhkLabel, formatPrice } from "@/lib/format";
 import { getProperty, getPropertySlugs, getSimilarProperties } from "@/lib/properties";
+import { statusBannerMessage, statusLabel } from "@/lib/property-status";
 import { breadcrumbSchema, faqSchema, metaDescription, residenceSchema } from "@/lib/seo";
 import { site } from "@/lib/site";
 
@@ -117,6 +118,7 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
   if (!property) notFound();
 
   const similar = getSimilarProperties(property, 3);
+  const statusMessage = statusBannerMessage(property.status);
 
   const breadcrumb = [
     { name: "Home", url: site.url },
@@ -141,6 +143,12 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
 
       <div className="grid min-w-0 gap-6 lg:grid-cols-[1fr_340px] lg:gap-8" data-pagefind-body>
         <div className="min-w-0">
+          {statusMessage && (
+            <div className="mb-4 rounded-2xl border border-brand-200 bg-surface-muted px-4 py-3 text-sm text-ink-muted">
+              <p className="font-semibold text-ink">{statusLabel(property.status)}</p>
+              <p className="mt-1">{statusMessage}</p>
+            </div>
+          )}
           <Gallery property={property} />
 
           <div className="mt-4 flex flex-wrap items-start justify-between gap-3 sm:mt-6">
@@ -177,6 +185,7 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
               <PropertyBody content={property.body} />
             </div>
             <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
+              <KeyValue label="Status" value={statusLabel(property.status)} />
               <KeyValue label="Listing" value={property.listing === "Rent" ? "For Rent" : "For Sale"} />
               <KeyValue label="Furnishing" value={property.furnished} />
               <KeyValue label="Parking" value={property.parking} />
