@@ -20,11 +20,19 @@ collections:
     slug: "{{slug}}"
     extension: "mdx"
     format: "frontmatter"
-    summary: "{{title}} — {{locality}}"
+    summary: "{{title}} — {{locality}} · {{status}}"
     fields:
       - { name: "slug", label: "Slug", widget: "string" }
       - { name: "title", label: "Title", widget: "string" }
       - { name: "listing", label: "Listing", widget: "select", options: ["Rent", "Sale"] }
+      - {
+          name: "status",
+          label: "Availability",
+          widget: "select",
+          default: "Available",
+          options: ["Available", "Rented", "Sold"],
+          hint: "Set to Rented or Sold when taken. The listing stays on the website for Google — it is hidden only when visitors filter by availability.",
+        }
       - {
           name: "propertyType",
           label: "Property Type",

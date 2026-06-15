@@ -1,4 +1,5 @@
 import type { Property } from "@/lib/types";
+import { isUnavailableStatus, statusLabel } from "@/lib/property-status";
 
 const STYLES: Record<string, string> = {
   Featured: "bg-brand-600/90 text-white",
@@ -6,6 +7,8 @@ const STYLES: Record<string, string> = {
   Vastu: "bg-violet-500/90 text-white",
   Bachelor: "bg-sky-600/90 text-white",
   Veg: "bg-green-600/90 text-white",
+  Rented: "bg-ink/75 text-white",
+  Sold: "bg-rose-700/90 text-white",
 };
 
 function Pill({ kind, children }: { kind: string; children: React.ReactNode }) {
@@ -21,8 +24,16 @@ function Pill({ kind, children }: { kind: string; children: React.ReactNode }) {
 }
 
 export function PropertyBadges({ property }: { property: Property }) {
+  const statusKind =
+    property.status === "Rented"
+      ? "Rented"
+      : property.status === "Sold"
+        ? "Sold"
+        : null;
+
   return (
     <div className="flex flex-wrap gap-1.5">
+      {statusKind && <Pill kind={statusKind}>{statusLabel(property.status)}</Pill>}
       {property.featured && <Pill kind="Featured">Featured</Pill>}
       {property.isNew && <Pill kind="New">New Listing</Pill>}
       {property.vastu && <Pill kind="Vastu">Vastu</Pill>}

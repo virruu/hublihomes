@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { bhkLabel, formatPrice } from "@/lib/format";
+import { isUnavailableStatus } from "@/lib/property-status";
 import type { Property } from "@/lib/types";
 
 import { PropertyBadges } from "./badges";
@@ -9,15 +10,17 @@ import { AreaIcon, BathIcon, BedIcon, PinIcon } from "./icons";
 import { PropertyImage } from "./property-image";
 
 export function PropertyCard({ property }: { property: Property }) {
+  const unavailable = isUnavailableStatus(property.status);
+
   return (
     <Link
       href={`/properties/${property.slug}`}
-      className="card group flex flex-col overflow-hidden fade-up"
+      className={`card group flex flex-col overflow-hidden fade-up ${unavailable ? "opacity-95" : ""}`}
     >
       <div className="relative">
         <PropertyImage
           property={property}
-          className="h-44 w-full transition-transform duration-500 group-hover:scale-[1.02] sm:h-52"
+          className={`h-44 w-full transition-transform duration-500 group-hover:scale-[1.02] sm:h-52 ${unavailable ? "grayscale-[35%]" : ""}`}
         />
         <div className="absolute left-3 top-3">
           <PropertyBadges property={property} />
