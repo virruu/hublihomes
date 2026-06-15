@@ -16,7 +16,7 @@ export function isUnavailableStatus(status: PropertyStatus): boolean {
 
 export function statusBannerMessage(status: PropertyStatus): string | null {
   if (status === "Rented" || status === "Sold") {
-    return "This listing stays online for reference and Google search. Contact us if you want similar homes.";
+    return "Contact us if you want similar homes.";
   }
   return null;
 }
