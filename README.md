@@ -69,6 +69,20 @@ The Decap CMS dashboard lives at `/admin/index.html`.
 
   Then open http://localhost:3000/admin/index.html and click **Login** (the local backend needs no credentials and writes changes directly to your working copy).
 
+#### Offline, drafts, and session errors
+
+Decap CMS **automatically saves a local draft** in your browser while you edit. If the tab closes or you reload, it should offer to restore that backup.
+
+If your internet drops while you are in the admin:
+
+1. **Keep editing** — your work stays in the browser.
+2. When you reconnect, use the green **Refresh session** banner if it appears, or log out and log back in via the user menu (top right).
+3. Do **not** close the tab before reconnecting unless you have copied important text.
+
+The `ACCESS_TOKEN_ERROR` / `failed getting jwt access token` message means your Netlify login token expired (common after disconnects). Your draft is not lost — refresh the session and publish again.
+
+**Optional (future):** enable `publish_mode: editorial_workflow` in `public/admin/config.yml` to save drafts as GitHub pull requests instead of publishing straight to the live site. That needs a separate review step before merge.
+
 ## Deployment (Netlify)
 
 `netlify.toml` is preconfigured. Connect the repo to Netlify; the build command is `npm run build` with the official `@netlify/plugin-nextjs`. Enable Netlify Identity + Git Gateway to use the admin dashboard in production.
