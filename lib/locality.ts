@@ -1,4 +1,26 @@
 import { site } from "./site";
+import type { Listing, PropertyType } from "./types";
+
+const TYPE_SLUGS: Record<PropertyType, string> = {
+  House: "house",
+  Flat: "flat",
+  Villa: "villa",
+  Plot: "plot",
+  Commercial: "commercial",
+  PG: "pg",
+};
+
+export function getLocationSlug(
+  listing: Listing,
+  propertyType: PropertyType,
+  locality: string,
+): string {
+  const type = TYPE_SLUGS[propertyType];
+  const loc = localitySlug(locality);
+  return listing === "Rent"
+    ? `rent-${type}-${loc}`
+    : `${type}-for-sale-${loc}`;
+}
 
 /** Trim and collapse whitespace for consistent locality values. */
 export function normalizeLocality(locality: string): string {

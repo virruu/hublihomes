@@ -1,4 +1,5 @@
-import { resolveLocalityFilter } from "./locality";
+import { getLocationSlug, resolveLocalityFilter } from "./locality";
+import type { Listing, PropertyType } from "./types";
 
 export interface ExplorerFilters {
   listing: string;
@@ -235,8 +236,31 @@ export function getPrimaryExplorerFilters(filters: ExplorerFilters): ExplorerFil
   };
 }
 
-export function isIndexableExplorerFilters(filters: ExplorerFilters): boolean {
-  return hasActiveExplorerFilters(filters) && !hasSecondaryExplorerFilters(filters);
+const LISTING_VALUES = ["Rent", "Sale"] as const;
+const TYPE_VALUES = [
+  "House",
+  "Flat",
+  "Villa",
+  "Plot",
+  "PG",
+  "Commercial",
+] as const;
+
+function matchesLocationPageFilters(filters: ExplorerFilters): boolean {
+  if (hasSecondaryExplorerFilters(filters)) return false;
+  if (filters.status !== "Any" || filters.bhk !== "Any") return false;
+  if (filters.listing === "Any" || filters.type === "Any" || filters.locality === "Any") {
+    return false;
+  }
+
+  return (
+    LISTING_VALUES.includes(filters.listing as (typeof LISTING_VALUES)[number]) &&
+    TYPE_VALUES.includes(filters.type as (typeof TYPE_VALUES)[number])
+  );
+}
+
+export function shouldNoindexExplorerFilters(filters: ExplorerFilters): boolean {
+  return hasActiveExplorerFilters(filters);
 }
 
 function buildExplorerDescription(filters: ExplorerFilters, heading: string): string {
@@ -333,14 +357,17 @@ export function getExplorerPageCopy(filters: ExplorerFilters): {
 }
 
 export function getExplorerCanonicalPath(filters: ExplorerFilters): string {
-  const canonicalFilters = hasSecondaryExplorerFilters(filters)
-    ? getPrimaryExplorerFilters(filters)
-    : filters;
-
-  if (!hasActiveExplorerFilters(canonicalFilters)) {
+  if (!hasActiveExplorerFilters(filters)) {
     return "/properties";
   }
 
-  const query = explorerFiltersToQuery(canonicalFilters);
-  return query ? `/properties?${query}` : "/properties";
+  if (matchesLocationPageFilters(filters)) {
+    return `/${getLocationSlug(
+      filters.listing as Listing,
+      filters.type as PropertyType,
+      filters.locality,
+    )}`;
+  }
+
+  return "/properties";
 }
