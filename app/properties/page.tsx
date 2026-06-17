@@ -6,10 +6,9 @@ import { metaDescription } from "@/lib/seo";
 import {
   getExplorerCanonicalPath,
   getExplorerPageCopy,
-  hasActiveExplorerFilters,
-  isIndexableExplorerFilters,
   parseExplorerFilters,
   searchParamsRecordToURLSearchParams,
+  shouldNoindexExplorerFilters,
 } from "@/lib/property-filters";
 import { getAllProperties, getLocalities } from "@/lib/properties";
 import { site } from "@/lib/site";
@@ -32,16 +31,13 @@ export function generateMetadata({
   const { title, description } = getExplorerPageCopy(filters);
   const trimmedDescription = metaDescription(description);
   const canonical = getExplorerCanonicalPath(filters);
-  const filtered = hasActiveExplorerFilters(filters);
-  const indexable = isIndexableExplorerFilters(filters);
+  const noindex = shouldNoindexExplorerFilters(filters);
 
   return {
     title,
     description: trimmedDescription,
     alternates: { canonical },
-    ...(filtered && !indexable
-      ? { robots: { index: false, follow: true } }
-      : {}),
+    ...(noindex ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       title,
       description: trimmedDescription,

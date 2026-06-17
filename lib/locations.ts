@@ -1,6 +1,7 @@
 import { getAllProperties } from "./properties";
 import {
   canonicalLocalityName,
+  getLocationSlug,
   localitiesMatch,
   localitySlug,
 } from "./locality";
@@ -16,15 +17,6 @@ export interface LocationPage {
   description: string;
 }
 
-const TYPE_SLUGS: Record<PropertyType, string> = {
-  House: "house",
-  Flat: "flat",
-  Villa: "villa",
-  Plot: "plot",
-  Commercial: "commercial",
-  PG: "pg",
-};
-
 export { localitySlug };
 
 function buildSlug(
@@ -32,11 +24,7 @@ function buildSlug(
   propertyType: PropertyType,
   locality: string,
 ): string {
-  const type = TYPE_SLUGS[propertyType];
-  const loc = localitySlug(locality);
-  return listing === "Rent"
-    ? `rent-${type}-${loc}`
-    : `${type}-for-sale-${loc}`;
+  return getLocationSlug(listing, propertyType, locality);
 }
 
 function pageFor(
