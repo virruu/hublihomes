@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { site } from "@/lib/site";
+import { trackPhoneClick } from "@/lib/analytics/track";
 
 import { CloseIcon, MenuIcon, PhoneIcon } from "./icons";
 import { SiteSearch } from "./site-search";
@@ -48,7 +49,11 @@ export function SiteHeader() {
             <div className="hidden sm:block">
               <SiteSearch />
             </div>
-            <a href={`tel:${site.phone}`} className="btn-primary hidden sm:inline-flex text-sm py-2.5">
+            <a
+              href={`tel:${site.phone}`}
+              className="btn-primary hidden sm:inline-flex text-sm py-2.5"
+              onClick={() => trackPhoneClick("header")}
+            >
               <PhoneIcon className="h-4 w-4" /> Call Us
             </a>
             <button
@@ -98,6 +103,7 @@ export function SiteHeader() {
               <a
                 href={`tel:${site.phone}`}
                 className="btn-primary mt-3 justify-center"
+                onClick={() => trackPhoneClick("mobile_menu")}
               >
                 <PhoneIcon className="h-5 w-5" /> Call Us
               </a>

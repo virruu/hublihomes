@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Suspense } from "react";
 
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { MicrosoftClarity } from "@/components/analytics/microsoft-clarity";
+import { AnalyticsPageView } from "@/components/analytics/page-view";
 import { FloatingContact } from "@/components/floating-contact";
 import { NetlifyIdentityWidget } from "@/components/netlify-identity";
 import { JsonLd } from "@/components/jsonld";
@@ -49,6 +53,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-sans antialiased bg-surface text-ink">
+        <GoogleAnalytics />
+        <MicrosoftClarity />
+        <Suspense fallback={null}>
+          <AnalyticsPageView />
+        </Suspense>
         <JsonLd data={localBusinessSchema()} />
         <SiteHeader />
         <main className="min-h-screen overflow-x-clip pb-20 md:pb-0">{children}</main>

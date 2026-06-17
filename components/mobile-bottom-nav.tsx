@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { site } from "@/lib/site";
+import { trackPhoneClick } from "@/lib/analytics/track";
 
 import { HeartIcon, HomeIcon, PhoneIcon, SearchIcon } from "./icons";
 import { SiteSearch } from "./site-search";
@@ -49,6 +50,7 @@ export function MobileBottomNav() {
         <a
           href={`tel:${site.phone}`}
           className="flex flex-col items-center gap-0.5 px-2 py-2.5 text-[11px] font-medium text-ink-faint"
+          onClick={() => trackPhoneClick("mobile_nav")}
         >
           <PhoneIcon className="h-5 w-5" />
           Call Us
