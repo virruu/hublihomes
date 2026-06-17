@@ -1,4 +1,7 @@
+"use client";
+
 import { site } from "@/lib/site";
+import { trackPhoneClick, trackWhatsAppClick } from "@/lib/analytics/track";
 
 import { PhoneIcon, WhatsAppIcon } from "./icons";
 
@@ -15,6 +18,7 @@ export function FloatingContact() {
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
         className="grid h-14 w-14 place-items-center rounded-full bg-[#25D366] text-white shadow-lift transition-transform hover:scale-105"
+        onClick={() => trackWhatsAppClick("floating")}
       >
         <WhatsAppIcon className="h-7 w-7" />
       </a>
@@ -22,6 +26,7 @@ export function FloatingContact() {
         href={`tel:${site.phone}`}
         aria-label="Call HubliHomes"
         className="grid h-14 w-14 place-items-center rounded-full bg-brand-600 text-white shadow-lift transition-transform hover:scale-105"
+        onClick={() => trackPhoneClick("floating")}
       >
         <PhoneIcon className="h-6 w-6" />
       </a>

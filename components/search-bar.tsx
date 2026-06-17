@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { trackSearch } from "@/lib/analytics/track";
+
 import { PinIcon, SearchIcon } from "./icons";
 
 const types = ["Any", "House", "Flat", "Villa", "Plot", "PG"];
@@ -23,7 +25,9 @@ export function SearchBar({ localities }: SearchBarProps) {
     params.set("listing", listing);
     if (type !== "Any") params.set("type", type);
     if (locality) params.set("locality", locality);
-    router.push(`/properties?${params.toString()}`);
+    const query = params.toString();
+    trackSearch([locality, type !== "Any" ? type : "", listing].filter(Boolean).join(" "), "home_hero");
+    router.push(`/properties?${query}`);
   }
 
   return (

@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 
+import { priceBand, trackAddToWishlist } from "@/lib/analytics/track";
+import type { Property } from "@/lib/types";
+
 import { HeartIcon } from "./icons";
 
 const KEY = "hh-favorites";
@@ -14,29 +17,54 @@ function readFavorites(): string[] {
   }
 }
 
+function analyticsContext(property?: Property) {
+  if (!property) return undefined;
+  return {
+    property_slug: property.slug,
+    property_title: property.title,
+    listing_type: property.listing,
+    property_type: property.propertyType,
+    locality: property.locality,
+    bhk: property.bhk,
+    price: property.price,
+    price_band: priceBand(property.price),
+    status: property.status,
+  };
+}
+
 export function FavoriteButton({
   slug,
+  property,
   className = "",
 }: {
-  slug: string;
+  slug?: string;
+  property?: Property;
   className?: string;
 }) {
+  const propertySlug = slug ?? property?.slug;
   const [favorite, setFavorite] = useState(false);
 
   useEffect(() => {
-    setFavorite(readFavorites().includes(slug));
-  }, [slug]);
+    if (!propertySlug) return;
+    setFavorite(readFavorites().includes(propertySlug));
+  }, [propertySlug]);
 
   function toggle(event: React.MouseEvent) {
+    if (!propertySlug) return;
     event.preventDefault();
     event.stopPropagation();
     const current = readFavorites();
-    const next = current.includes(slug)
-      ? current.filter((item) => item !== slug)
-      : [...current, slug];
+    const isRemoving = current.includes(propertySlug);
+    const next = isRemoving
+      ? current.filter((item) => item !== propertySlug)
+      : [...current, propertySlug];
     localStorage.setItem(KEY, JSON.stringify(next));
     window.dispatchEvent(new Event("hh-favorites-changed"));
-    setFavorite(next.includes(slug));
+    setFavorite(next.includes(propertySlug));
+
+    if (!isRemoving) {
+      trackAddToWishlist(analyticsContext(property) ?? { property_slug: propertySlug });
+    }
   }
 
   return (
