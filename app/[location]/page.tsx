@@ -80,7 +80,7 @@ export default function LocationPage({
           <PropertyCard key={property.slug} property={property} />
         ))}
       </div>
-
+      
       <div className="mt-8 sm:mt-10">
         <Link href="/properties" className="btn-ghost">
           Browse all properties
