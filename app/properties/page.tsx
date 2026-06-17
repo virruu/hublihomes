@@ -16,6 +16,9 @@ import { site } from "@/lib/site";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
+/** Refresh listings after CMS edits without waiting for a full redeploy. */
+export const revalidate = 60;
+
 export function generateMetadata({
   searchParams,
 }: {

@@ -1,13 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { SearchBar } from "@/components/search-bar";
+import { getLocalities } from "@/lib/properties";
 import { heroBlurDataUrl } from "@/lib/hero-blur";
 import { site } from "@/lib/site";
 
-const popularLocalities = site.localities.slice(0, 5);
+import { SearchBar } from "@/components/search-bar";
 
 export function HomeHero() {
+  const localities = getLocalities();
+  const popularLocalities = localities.slice(0, 5);
   return (
     <section className="relative isolate min-h-[88svh] overflow-hidden sm:min-h-[78vh]">
       <div className="absolute inset-0 -z-20">
@@ -50,7 +52,7 @@ export function HomeHero() {
           Vastu, vegetarian-friendly, parking, water supply and more.
         </p>
         <div className="fade-up mt-8 sm:mt-10 [animation-delay:200ms]">
-          <SearchBar />
+          <SearchBar localities={localities} />
         </div>
         <div className="fade-up mt-6 flex flex-wrap justify-center gap-2 sm:mt-8 [animation-delay:260ms]">
           <span className="text-sm text-white/75">Popular:</span>
