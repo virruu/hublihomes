@@ -43,7 +43,26 @@ collections:
       - { name: "price", label: "Price (INR)", widget: "number", value_type: "int" }
       - { name: "priceSuffix", label: "Price Suffix", widget: "string", required: false, default: "" }
       - { name: "area", label: "Area (sqft)", widget: "number", value_type: "int" }
-      - { name: "locality", label: "Locality", widget: "string" }
+      - {
+          name: "locality",
+          label: "Locality",
+          widget: "select",
+          options:
+            [
+              "Vidyanagar",
+              "Gokul Road",
+              "Keshwapur",
+              "Shirur Park",
+              "Deshpande Nagar",
+              "Unkal",
+              "Navanagar",
+              "Rajendra Nagar",
+              "Madhura Colony",
+              "Akshay Colony",
+              "Old Hubli",
+            ],
+          hint: "Pick the main Hubli area. Listings are grouped on location pages by this value.",
+        }
       - { name: "city", label: "City", widget: "string", default: "Hubli" }
       - { name: "facing", label: "Facing", widget: "select", options: ["East", "West", "North", "South"] }
       - { name: "vastu", label: "Vastu Compliant", widget: "boolean", default: false }

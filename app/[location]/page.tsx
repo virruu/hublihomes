@@ -12,7 +12,7 @@ import {
 import { breadcrumbSchema, metaDescription } from "@/lib/seo";
 import { site } from "@/lib/site";
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return getLocationPages().map((page) => ({ location: page.slug }));

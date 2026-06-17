@@ -5,6 +5,7 @@ import path from "node:path";
 
 import matter from "gray-matter";
 
+import { canonicalLocalityName, localitiesMatch, localitySlug } from "./locality";
 import type { Property, PropertyStatus } from "./types";
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "properties");
@@ -39,7 +40,7 @@ function normalizeProperty(
     price: data.price ?? 0,
     priceSuffix,
     area: data.area ?? 0,
-    locality: data.locality ?? "Hubli",
+    locality: canonicalLocalityName(data.locality ?? "Hubli"),
     city: data.city ?? "Hubli",
     facing: data.facing ?? "East",
     vastu: data.vastu ?? false,
@@ -80,7 +81,7 @@ function parseProperty(file: string): Property {
 }
 
 export function getAllProperties(): Property[] {
-  if (cache) return cache;
+  if (process.env.NODE_ENV === "production" && cache) return cache;
 
   const files = fs
     .readdirSync(CONTENT_DIR)
@@ -93,7 +94,9 @@ export function getAllProperties(): Property[] {
     return a.title.localeCompare(b.title);
   });
 
-  cache = properties;
+  if (process.env.NODE_ENV === "production") {
+    cache = properties;
+  }
   return properties;
 }
 
@@ -116,7 +119,7 @@ export function getSimilarProperties(property: Property, limit = 3): Property[] 
     .filter((candidate) => candidate.slug !== property.slug)
     .map((candidate) => {
       let score = 0;
-      if (candidate.locality === property.locality) score += 3;
+      if (localitiesMatch(candidate.locality, property.locality)) score += 3;
       if (candidate.propertyType === property.propertyType) score += 2;
       if (candidate.listing === property.listing) score += 2;
       if (candidate.bhk === property.bhk) score += 1;
@@ -128,9 +131,17 @@ export function getSimilarProperties(property: Property, limit = 3): Property[] 
 }
 
 export function getLocalities(): string[] {
-  return Array.from(
-    new Set(getAllProperties().map((property) => property.locality)),
-  ).sort();
+  const seen = new Map<string, string>();
+
+  for (const property of getAllProperties()) {
+    const label = canonicalLocalityName(property.locality);
+    const slug = localitySlug(label);
+    if (!seen.has(slug)) {
+      seen.set(slug, label);
+    }
+  }
+
+  return Array.from(seen.values()).sort();
 }
 
 export function clearPropertyCache() {
