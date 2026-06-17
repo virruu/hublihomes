@@ -3,6 +3,7 @@ import { timingSafeEqual } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
+import { getLocationPages } from "@/lib/locations";
 import { clearPropertyCache } from "@/lib/properties";
 
 function secretsMatch(provided: string | null, expected: string): boolean {
@@ -33,6 +34,11 @@ export async function POST(request: Request) {
   revalidatePath("/properties");
   revalidatePath("/properties/[slug]", "page");
   revalidatePath("/[location]", "page");
+  revalidatePath("/sitemap.xml");
+
+  for (const page of getLocationPages()) {
+    revalidatePath(`/${page.slug}`);
+  }
 
   const hook = process.env.NETLIFY_BUILD_HOOK_URL;
   if (hook) {

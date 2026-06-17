@@ -1,4 +1,9 @@
 import { getAllProperties } from "./properties";
+import {
+  canonicalLocalityName,
+  localitiesMatch,
+  localitySlug,
+} from "./locality";
 import type { Listing, Property, PropertyType } from "./types";
 
 export interface LocationPage {
@@ -20,9 +25,7 @@ const TYPE_SLUGS: Record<PropertyType, string> = {
   PG: "pg",
 };
 
-export function localitySlug(locality: string): string {
-  return locality.toLowerCase().replace(/\s+/g, "-");
-}
+export { localitySlug };
 
 function buildSlug(
   listing: Listing,
@@ -41,16 +44,17 @@ function pageFor(
   propertyType: PropertyType,
   locality: string,
 ): LocationPage {
+  const canonical = canonicalLocalityName(locality);
   const verb = listing === "Rent" ? "for Rent" : "for Sale";
   const typeLabel = propertyType === "PG" ? "PG" : `${propertyType}s`;
   return {
-    slug: buildSlug(listing, propertyType, locality),
+    slug: buildSlug(listing, propertyType, canonical),
     listing,
     propertyType,
-    locality,
-    title: `${propertyType} ${verb} in ${locality}, Hubli`,
-    heading: `${typeLabel} ${verb} in ${locality}`,
-    description: `Browse curated ${propertyType.toLowerCase()} listings ${verb.toLowerCase()} in ${locality}, Hubli. Verified details on Vastu, parking, water supply, bachelor & family preferences — only on HubliHomes.`,
+    locality: canonical,
+    title: `${propertyType} ${verb} in ${canonical}, Hubli`,
+    heading: `${typeLabel} ${verb} in ${canonical}`,
+    description: `Browse curated ${propertyType.toLowerCase()} listings ${verb.toLowerCase()} in ${canonical}, Hubli. Verified details on Vastu, parking, water supply, bachelor & family preferences — only on HubliHomes.`,
   };
 }
 
@@ -76,6 +80,17 @@ export function getLocationPageProperties(page: LocationPage): Property[] {
     (property) =>
       property.listing === page.listing &&
       property.propertyType === page.propertyType &&
-      property.locality === page.locality,
+      localitiesMatch(property.locality, page.locality),
+  );
+}
+
+export function propertyMatchesLocationPage(
+  property: Property,
+  page: LocationPage,
+): boolean {
+  return (
+    property.listing === page.listing &&
+    property.propertyType === page.propertyType &&
+    localitiesMatch(property.locality, page.locality)
   );
 }

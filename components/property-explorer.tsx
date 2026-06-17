@@ -12,6 +12,7 @@ import {
   shouldNormalizeExplorerQuery,
   type ExplorerFilters,
 } from "@/lib/property-filters";
+import { localitiesMatch } from "@/lib/locality";
 import { statusSortRank } from "@/lib/property-status";
 import type { Property } from "@/lib/types";
 
@@ -208,7 +209,7 @@ export function PropertyExplorer({
         return false;
       if (filters.type !== "Any" && property.propertyType !== filters.type)
         return false;
-      if (filters.locality !== "Any" && property.locality !== filters.locality)
+      if (filters.locality !== "Any" && !localitiesMatch(property.locality, filters.locality))
         return false;
       if (filters.bhk !== "Any") {
         if (filters.bhk === "4+") {

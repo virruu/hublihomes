@@ -1,3 +1,5 @@
+import { resolveLocalityFilter } from "./locality";
+
 export interface ExplorerFilters {
   listing: string;
   status: string;
@@ -92,13 +94,11 @@ export function parseExplorerFilters(
   params: ParamSource,
   localities: string[],
 ): ExplorerFilters {
-  const localityOptions = ["Any", ...localities];
-
   return {
     listing: pickOption(params.get("listing"), LISTING_OPTIONS, "Any"),
     status: pickOption(params.get("status"), STATUS_OPTIONS, "Any"),
     type: pickOption(params.get("type"), TYPE_OPTIONS, "Any"),
-    locality: pickOption(params.get("locality"), localityOptions, "Any"),
+    locality: resolveLocalityFilter(params.get("locality"), localities),
     bhk: pickOption(params.get("bhk"), BHK_OPTIONS, "Any"),
     budget: parseBudget(params.get("budget")),
     furnished: pickOption(params.get("furnished"), FURNISHED_OPTIONS, "Any"),
