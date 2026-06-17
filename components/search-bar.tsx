@@ -3,13 +3,15 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { site } from "@/lib/site";
-
 import { PinIcon, SearchIcon } from "./icons";
 
 const types = ["Any", "House", "Flat", "Villa", "Plot", "PG"];
 
-export function SearchBar() {
+interface SearchBarProps {
+  localities: string[];
+}
+
+export function SearchBar({ localities }: SearchBarProps) {
   const router = useRouter();
   const [listing, setListing] = useState("Rent");
   const [locality, setLocality] = useState("");
@@ -56,7 +58,7 @@ export function SearchBar() {
             aria-label="Locality"
           >
             <option value="">Any locality</option>
-            {site.localities.map((option) => (
+            {localities.map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>

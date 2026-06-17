@@ -46,22 +46,8 @@ collections:
       - {
           name: "locality",
           label: "Locality",
-          widget: "select",
-          options:
-            [
-              "Vidyanagar",
-              "Gokul Road",
-              "Keshwapur",
-              "Shirur Park",
-              "Deshpande Nagar",
-              "Unkal",
-              "Navanagar",
-              "Rajendra Nagar",
-              "Madhura Colony",
-              "Akshay Colony",
-              "Old Hubli",
-            ],
-          hint: "Pick the main Hubli area. Listings are grouped on location pages by this value.",
+          widget: "string",
+          hint: "Main Hubli area — e.g. Vidyanagar, Keshwapur, Gokul Road. You can type any new area; it appears in site filters after publish.",
         }
       - { name: "city", label: "City", widget: "string", default: "Hubli" }
       - { name: "facing", label: "Facing", widget: "select", options: ["East", "West", "North", "South"] }

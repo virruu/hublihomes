@@ -6,6 +6,7 @@ import path from "node:path";
 import matter from "gray-matter";
 
 import { canonicalLocalityName, localitiesMatch, localitySlug } from "./locality";
+import { site } from "./site";
 import type { Property, PropertyStatus } from "./types";
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "properties");
@@ -132,6 +133,11 @@ export function getSimilarProperties(property: Property, limit = 3): Property[] 
 
 export function getLocalities(): string[] {
   const seen = new Map<string, string>();
+
+  for (const entry of site.localities) {
+    const label = canonicalLocalityName(entry);
+    seen.set(localitySlug(label), label);
+  }
 
   for (const property of getAllProperties()) {
     const label = canonicalLocalityName(property.locality);

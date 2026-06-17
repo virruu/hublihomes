@@ -9,6 +9,8 @@ import { metaDescription } from "@/lib/seo";
 import { getAllProperties, getFeaturedProperties } from "@/lib/properties";
 import { site } from "@/lib/site";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: site.homeSeoTitle,
   alternates: { canonical: "/" },
