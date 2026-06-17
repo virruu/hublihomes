@@ -12,10 +12,14 @@ export const site = {
   localities: [
     "Vidyanagar",
     "Gokul Road",
-    "Navanagar",
     "Keshwapur",
+    "Shirur Park",
     "Deshpande Nagar",
-    "Akshay Colony",
     "Unkal",
+    "Navanagar",
+    "Rajendra Nagar",
+    "Madhura Colony",
+    "Akshay Colony",
+    "Old Hubli",
   ],
 } as const;
